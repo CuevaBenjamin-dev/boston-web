@@ -6,7 +6,7 @@ export const nexoLegalEn: Record<NexoDocumentKey, NexoDocument> = {
     description: "Information about personal data processing related to Nexo and its planned integration with the WhatsApp Business Platform.",
     sections: [
       { title: "Provider identification", blocks: [
-        paragraph("Nexo is a technology application of BOSTON BILINGUAL SCHOOL currently under development. Its owner is identified by Peruvian taxpayer number (RUC) 20613627392, with its registered tax address at CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Nexo is a technology application currently under development by BOSTON BILINGUAL SCHOOL S.A.C. (trade name: BBS), with Peruvian taxpayer number (RUC) 20615655717 and registered tax address at CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         paragraph("This policy describes the processing of personal data related to Nexo, including conversation management, inquiry handling and connection to the WhatsApp Business Platform, to the extent those services are enabled."),
       ] },
       { title: "Scope and responsibilities", blocks: [
@@ -107,7 +107,7 @@ export const nexoLegalEn: Record<NexoDocumentKey, NexoDocument> = {
     description: "General conditions for accessing and using Nexo's technology services.",
     sections: [
       { title: "Provider identification", blocks: [
-        paragraph("Nexo is a technology application of BOSTON BILINGUAL SCHOOL currently under development. Its owner is identified by Peruvian taxpayer number (RUC) 20613627392, with its registered tax address at CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Nexo is a technology application currently under development by BOSTON BILINGUAL SCHOOL S.A.C. (trade name: BBS), with Peruvian taxpayer number (RUC) 20615655717 and registered tax address at CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         paragraph("These terms generally govern access to and use of Nexo. Specific commercial conditions may be set out in contracts, proposals or agreements entered into with each client organization."),
       ] },
       { title: "Service description", blocks: [
@@ -170,7 +170,7 @@ export const nexoLegalEn: Record<NexoDocumentKey, NexoDocument> = {
       ] },
       { title: "Governing law and contact", blocks: [
         paragraph("These terms will be interpreted under applicable Peruvian law, without prejudice to other mandatory rules that may apply."),
-        paragraph("For inquiries about Nexo's terms, contact Boston Bilingual School, RUC 20613627392:"),
+        paragraph("For inquiries about Nexo's terms, contact BOSTON BILINGUAL SCHOOL S.A.C., RUC 20615655717:"),
         link("Contact email: ", nexoContact, nexoEmailHref("Terms inquiry — Nexo"), "."),
         link("Website: ", "https://bostonbbs.com", "https://bostonbbs.com", "."),
         link("Read the ", "Nexo privacy policy", "/en/nexo/privacy/", "."),
@@ -230,7 +230,7 @@ export const nexoLegalEn: Record<NexoDocumentKey, NexoDocument> = {
         link("To learn how information is processed, read the ", "Nexo privacy policy", "/en/nexo/privacy/", "."),
       ] },
       { title: "Contact", blocks: [
-        paragraph("Organization handling requests: BOSTON BILINGUAL SCHOOL. RUC: 20613627392. Registered tax address: CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Organization handling requests: BOSTON BILINGUAL SCHOOL S.A.C. (trade name: BBS). RUC: 20615655717. Registered tax address: CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         link("Email: ", nexoContact, nexoEmailHref("Nexo data deletion request"), "."),
         paragraph("Requests will be handled under applicable law and the responsibilities of the parties involved."),
       ] },

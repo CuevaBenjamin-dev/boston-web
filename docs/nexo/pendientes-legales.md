@@ -4,9 +4,10 @@ Las seis páginas se prepararon el 10 de octubre de 2026 y Boston aprobó los te
 
 ## Datos confirmados por Boston
 
-- Nombre registrado: **BOSTON BILINGUAL SCHOOL**.
-- RUC: **20613627392**.
-- Domicilio fiscal: **CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ**.
+- Razón social: **BOSTON BILINGUAL SCHOOL S.A.C.**.
+- RUC: **20615655717**.
+- Nombre comercial: **BBS**.
+- Domicilio fiscal: **CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ**.
 - Correo autorizado y operativo para solicitudes: **idiomasboston@gmail.com**.
 - Nexo es una aplicación tecnológica de Boston **en desarrollo**. La incorporación como proveedor tecnológico de Meta **todavía no está aprobada**.
 - Nexo se desarrolla en un proyecto independiente de esta web. La publicación de estas páginas informativas no requiere auditar su código.

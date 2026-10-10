@@ -6,7 +6,7 @@ export const nexoLegalEs: Record<NexoDocumentKey, NexoDocument> = {
     description: "Información sobre el tratamiento de datos personales relacionado con Nexo y su integración prevista con WhatsApp Business Platform.",
     sections: [
       { title: "Identificación del proveedor", blocks: [
-        paragraph("Nexo es una aplicación tecnológica de BOSTON BILINGUAL SCHOOL en desarrollo. Su titular está identificado con RUC N.º 20613627392 y domicilio fiscal en CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Nexo es una aplicación tecnológica en desarrollo de BOSTON BILINGUAL SCHOOL S.A.C. (nombre comercial: BBS), con RUC N.º 20615655717 y domicilio fiscal en CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         paragraph("La presente política describe el tratamiento de datos personales relacionado con Nexo, incluidos los servicios de gestión de conversaciones, atención de consultas y conexión con WhatsApp Business Platform, en la medida en que estén habilitados."),
       ] },
       { title: "Ámbito de aplicación y responsabilidades", blocks: [
@@ -107,7 +107,7 @@ export const nexoLegalEs: Record<NexoDocumentKey, NexoDocument> = {
     description: "Condiciones generales para el acceso y utilización de los servicios tecnológicos de Nexo.",
     sections: [
       { title: "Proveedor e identificación", blocks: [
-        paragraph("Nexo es una aplicación tecnológica de BOSTON BILINGUAL SCHOOL en desarrollo. Su titular está identificado con RUC N.º 20613627392 y domicilio fiscal en CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Nexo es una aplicación tecnológica en desarrollo de BOSTON BILINGUAL SCHOOL S.A.C. (nombre comercial: BBS), con RUC N.º 20615655717 y domicilio fiscal en CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         paragraph("Estos términos regulan de manera general el acceso y la utilización de Nexo. Las condiciones comerciales específicas podrán desarrollarse mediante contratos, propuestas o acuerdos suscritos con cada organización cliente."),
       ] },
       { title: "Descripción del servicio", blocks: [
@@ -170,7 +170,7 @@ export const nexoLegalEs: Record<NexoDocumentKey, NexoDocument> = {
       ] },
       { title: "Legislación y contacto", blocks: [
         paragraph("Estos términos se interpretarán conforme a la legislación peruana aplicable, sin perjuicio de otras normas imperativas que correspondan."),
-        paragraph("Para consultas relacionadas con los términos de Nexo, puede comunicarse con Boston Bilingual School, RUC 20613627392:"),
+        paragraph("Para consultas relacionadas con los términos de Nexo, puede comunicarse con BOSTON BILINGUAL SCHOOL S.A.C., RUC 20615655717:"),
         link("Correo de contacto: ", nexoContact, nexoEmailHref("Consulta sobre términos — Nexo"), "."),
         link("Sitio web: ", "https://bostonbbs.com", "https://bostonbbs.com", "."),
         link("Consulte la ", "Política de privacidad de Nexo", "/nexo/privacidad/", "."),
@@ -230,7 +230,7 @@ export const nexoLegalEs: Record<NexoDocumentKey, NexoDocument> = {
         link("Para conocer cómo se trata la información, consulta la ", "Política de privacidad de Nexo", "/nexo/privacidad/", "."),
       ] },
       { title: "Contacto", blocks: [
-        paragraph("Responsable de atención de solicitudes: BOSTON BILINGUAL SCHOOL. RUC: 20613627392. Domicilio fiscal: CAL. SAN ANDRES MZA. U LOTE. 35 URB. SAN ANDRES 1 ERA ETAPA, TRUJILLO, LA LIBERTAD, PERÚ."),
+        paragraph("Responsable de atención de solicitudes: BOSTON BILINGUAL SCHOOL S.A.C. (nombre comercial: BBS). RUC: 20615655717. Domicilio fiscal: CAL. SAN ANDRES NRO. 307 URB. SAN ANDRES, TRUJILLO, TRUJILLO, LA LIBERTAD, PERÚ."),
         link("Correo: ", nexoContact, nexoEmailHref("Solicitud de eliminación de datos — Nexo"), "."),
         paragraph("Las solicitudes se atenderán conforme a la normativa aplicable y las responsabilidades de las partes involucradas."),
       ] },
