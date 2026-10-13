@@ -17,6 +17,9 @@ const translatedPairs = [
   ['/es/primaria/', '/en/primaria/'],
   ['/es/secundaria/', '/en/secundaria/'],
   ['/es/admisiones/', '/en/admisiones/'],
+  ['/es/admisiones/como-postular/', '/en/admisiones/como-postular/'],
+  ['/es/admisiones/pensiones/', '/en/admisiones/pensiones/'],
+  ['/es/admisiones/vacantes/', '/en/admisiones/vacantes/'],
   ['/es/contacto/', '/en/contacto/'],
   ['/es/articulos/', '/en/articulos/'],
   ['/es/privacidad/', '/en/privacidad/'],
@@ -66,6 +69,30 @@ export const pageMetadata = {
   '/en/admisiones/': {
     title: 'Admissions 2027 in Trujillo | Boston Bilingual School',
     description: 'Learn about the 2027 admissions process, requirements and how to contact or visit Boston Bilingual School in Trujillo.',
+  },
+  '/es/admisiones/como-postular/': {
+    title: 'Cómo postular 2027 | Boston Bilingual School',
+    description: 'Conoce las etapas de admisión 2027 y los requisitos para postular a Primaria y Secundaria en Boston Bilingual School.',
+  },
+  '/en/admisiones/como-postular/': {
+    title: 'How to apply in 2027 | Boston Bilingual School',
+    description: 'Explore the 2027 admissions steps and transfer requirements for Primary and Secondary at Boston Bilingual School.',
+  },
+  '/es/admisiones/pensiones/': {
+    title: 'Pensiones escolares 2027 | Boston Bilingual School',
+    description: 'Consulta con Admisiones la información vigente de matrícula, pensiones y condiciones de pago para 2027.',
+  },
+  '/en/admisiones/pensiones/': {
+    title: 'School fees 2027 | Boston Bilingual School',
+    description: 'Contact Admissions for current 2027 enrollment costs, school fees and payment terms.',
+  },
+  '/es/admisiones/vacantes/': {
+    title: 'Vacantes 2027 | Boston Bilingual School',
+    description: 'Consulta la disponibilidad de vacantes 2027 por grado para Primaria y Secundaria en Boston Bilingual School.',
+  },
+  '/en/admisiones/vacantes/': {
+    title: 'Available places 2027 | Boston Bilingual School',
+    description: 'Ask Admissions about 2027 availability by grade for Primary and Secondary at Boston Bilingual School.',
   },
   '/es/contacto/': {
     title: 'Contacto y visitas | Boston Bilingual School Trujillo',

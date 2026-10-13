@@ -1,0 +1,11 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Footer from '../../../components/Footer.astro';
+import AdmissionsBody from '../../../components/AdmissionsBody.astro';
+const lang = 'en';
+---
+<Layout title="Available places | Admissions 2027 | Boston Bilingual School" lang={lang}>
+  <main class="admissions-page"><AdmissionsBody lang={lang} section="vacancies" /></main>
+  <Footer lang={lang} />
+</Layout>
+<style>.admissions-page{overflow-x:clip;background:#fff}</style>

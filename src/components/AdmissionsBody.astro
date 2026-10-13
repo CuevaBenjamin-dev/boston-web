@@ -1,226 +1,341 @@
 ---
-import ImageBandShade from "./ImageBandShade.astro";
-import AdmissionsFormSimple from "./AdmissionsFormSimple.astro";
+import AdmissionsFormSimple from './AdmissionsFormSimple.astro';
 
-interface Props { lang: "es" | "en" }
-const { lang } = Astro.props;
+type Section = 'overview' | 'process' | 'fees' | 'vacancies';
+interface Props { lang: 'es' | 'en'; section?: Section }
+const { lang, section = 'overview' } = Astro.props;
+const base = `/${lang}/admisiones/`;
+const applyHref = `${base}#postulacion`;
+const routes: Record<Section, string> = {
+  overview: base,
+  process: `${base}como-postular/`,
+  fees: `${base}pensiones/`,
+  vacancies: `${base}vacantes/`,
+};
 
 const copy = {
   es: {
-    benefits: [
-      { icon: "people", title: "Atención personalizada", text: "Acompañamiento cercano durante todo el proceso." },
-      { icon: "document", title: "Proceso claro", text: "Etapas simples y bien definidas para postular." },
-      { icon: "shield", title: "Matrícula segura", text: "Documentación y validación ordenada." },
-      { icon: "chat", title: "Respuesta oportuna", text: "Nuestro equipo resuelve tus dudas con rapidez." },
-    ],
-    processTitle: "Proceso de Admisión",
-    processIntro: "Conoce las etapas para formar parte de Boston Bilingual School.",
-    steps: [
-      { icon: "document", title: "Solicitud de Vacante", text: "Consulta disponibilidad por grado y sección. Contacta con nuestro equipo para conocer los lugares disponibles." },
-      { icon: "people", title: "Entrevista o Evaluación", text: "Entrevista con la familia y/o evaluación de admisión para conocer el perfil del estudiante." },
-      { icon: "folder", title: "Documentación", text: "Presentación de documentación y requisitos necesarios para completar el proceso." },
-      { icon: "contract", title: "Matrícula", text: "Matrícula y firma del contrato de servicio educativo para formalizar tu ingreso." },
-    ],
-    requirementsTitle: "Requisitos y Documentación",
-    transfers: "Para Traslados",
-    requested: "Se solicita la siguiente documentación:",
-    requirements: ["Libreta de notas", "Foto del DNI del estudiante", "Foto del DNI de ambos padres", "Constancia de no adeudo del colegio de procedencia"],
-    interviewAlt: "Asesora de admisiones atendiendo a una familia",
-    questionsTitle: "¿Tienes Preguntas?",
-    questionsIntro: "Nuestro equipo de admisiones está disponible para resolver todas tus dudas.",
-    phone: "Teléfono",
-    email: "Email",
-    finalStart: "¿Listo para dar",
-    finalAccent: "el siguiente paso?",
-    finalText: "Agenda una visita o solicita admisión y descubre todo lo que Boston puede ofrecer a tu familia.",
-    finalButton: "Solicitar admisión",
+    home: 'Inicio', admission: 'Admisión 2027', sideTitle: 'Explora admisiones',
+    nav: { overview: 'Admisión de nuevos estudiantes', process: 'Cómo postular', fees: 'Pensiones escolares', vacancies: 'Vacantes disponibles' },
+    sideHelp: '¿Necesitas orientación?', sideHelpText: 'Nuestro equipo puede ayudarte a resolver tus dudas antes de postular.', sideHelpLink: 'Contactar a Admisiones',
+    apply: 'Solicitar admisión', consult: 'Consultar con Admisiones', more: 'Conoce el proceso',
+    overview: {
+      eyebrow: 'TU CAMINO COMIENZA AQUÍ', title: 'Un lugar para crecer, aprender y descubrir.',
+      intro: 'En Boston Bilingual School acompañamos a cada familia con cercanía y claridad durante el proceso de admisión 2027. Conoce nuestra propuesta para Primaria y Secundaria y encuentra el siguiente paso para tu familia.',
+      imageAlt: 'Asesora de admisiones conversando con una familia', imageLabel: 'Una comunidad que acompaña',
+      levelsTitle: 'Una formación para cada etapa',
+      primary: 'Primaria', primaryText: 'Una base bilingüe y una formación integral que despiertan la curiosidad y el gusto por aprender.',
+      secondary: 'Secundaria', secondaryText: 'Acompañamiento académico y experiencias que preparan a los estudiantes para sus próximos desafíos.',
+      pathwayTitle: 'Todo lo que necesitas saber', pathwayIntro: 'Explora cada apartado a tu ritmo. Cuando estés listo, completa la ficha de admisión al final de esta página.',
+      pathway: ['Conoce las etapas y los requisitos del proceso.', 'Consulta la información económica directamente con el colegio.', 'Pregunta por la disponibilidad para el grado de interés.'],
+      formEyebrow: 'SIGUIENTE PASO', formTitle: 'Comienza tu solicitud', formText: 'Completa la ficha de admisión y nuestro equipo se pondrá en contacto contigo.',
+    },
+    process: {
+      eyebrow: 'UN PROCESO CLARO', title: 'Cómo postular',
+      intro: 'Te acompañamos en cada etapa del proceso. La entrevista o evaluación se realiza según corresponda al grado solicitado.',
+      steps: [
+        { title: 'Solicitud de información', text: 'Completa la ficha de admisión para que nuestro equipo conozca tu interés y pueda orientarte.' },
+        { title: 'Entrevista o evaluación', text: 'Conversamos con la familia y, si corresponde, realizamos una evaluación de admisión.' },
+        { title: 'Documentación', text: 'Presenta los requisitos necesarios para continuar el proceso de ingreso.' },
+        { title: 'Matrícula', text: 'Completa la matrícula y la firma del contrato de servicio educativo.' },
+      ],
+      tabsTitle: 'Orientación por nivel', primary: 'Primaria', secondary: 'Secundaria',
+      primaryText: 'Nuestro equipo orienta a las familias de Primaria sobre la solicitud, la entrevista o evaluación que corresponda y los documentos necesarios.',
+      secondaryText: 'Para Secundaria, el equipo de admisiones explica las etapas aplicables al grado solicitado y acompaña a la familia hasta la matrícula.',
+      transfersTitle: 'Documentación para traslados', transfersIntro: 'Entre los requisitos existentes para traslados se encuentran:',
+      requirements: ['Libreta de notas', 'Foto del DNI del estudiante', 'Foto del DNI de ambos padres', 'Constancia de no adeudo del colegio de procedencia'],
+      requirementsNote: 'Confirma con Admisiones la documentación aplicable a tu caso antes de presentarla.',
+    },
+    fees: {
+      eyebrow: 'INFORMACIÓN ECONÓMICA', title: 'Pensiones escolares',
+      intro: 'La información sobre matrícula, pensiones, cronogramas y condiciones de pago se confirma directamente con Admisiones. Te orientaremos según el nivel y el grado de interés.',
+      cards: [
+        { title: 'Matrícula', text: 'Consulta el importe y las condiciones vigentes para formalizar el ingreso.' },
+        { title: 'Pensiones', text: 'Solicita la información de pensiones correspondiente al nivel de interés.' },
+        { title: 'Cronograma', text: 'Pide el calendario vigente de pagos y sus fechas aplicables.' },
+      ],
+      tableTitle: 'Consulta por nivel', level: 'Nivel', tuition: 'Matrícula', pension: 'Pensión',
+      primary: 'Primaria', secondary: 'Secundaria', onRequest: 'Información previa consulta',
+      conditionsTitle: 'Condiciones de pago', conditionsText: 'El equipo de Admisiones te proporcionará las condiciones y el cronograma vigentes antes de completar la matrícula.',
+      note: 'No se muestran importes sin confirmación oficial del colegio.',
+    },
+    vacancies: {
+      eyebrow: 'INGRESO 2027', title: 'Vacantes disponibles',
+      intro: 'La disponibilidad puede variar por nivel y grado. Consulta con Admisiones para recibir información actualizada antes de iniciar tu solicitud.',
+      tabsTitle: 'Consulta por nivel', primary: 'Primaria', secondary: 'Secundaria', grade: 'Grado', availability: 'Disponibilidad', onRequest: 'Consultar disponibilidad',
+      primaryGrades: ['1.º Primaria', '2.º Primaria', '3.º Primaria', '4.º Primaria', '5.º Primaria', '6.º Primaria'],
+      secondaryGrades: ['1.º Secundaria', '2.º Secundaria', '3.º Secundaria', '4.º Secundaria', '5.º Secundaria'],
+      noteTitle: 'Disponibilidad sujeta a confirmación', note: 'Esta página no declara vacantes confirmadas. Nuestro equipo verificará la disponibilidad para el grado que necesitas.',
+    },
+    ctaTitle: 'Estamos aquí para acompañarte', ctaText: 'Cuéntanos qué grado te interesa y te orientaremos sobre el siguiente paso.',
   },
   en: {
-    benefits: [
-      { icon: "people", title: "Personalized support", text: "Close guidance throughout the entire process." },
-      { icon: "document", title: "Clear process", text: "Simple, well-defined steps to apply." },
-      { icon: "shield", title: "Secure enrollment", text: "Documents and validation handled in an orderly way." },
-      { icon: "chat", title: "Timely response", text: "Our team answers your questions promptly." },
-    ],
-    processTitle: "Admissions Process",
-    processIntro: "Explore the steps to become part of Boston Bilingual School.",
-    steps: [
-      { icon: "document", title: "Request a Place", text: "Check availability by grade and class. Contact our team to learn about available places." },
-      { icon: "people", title: "Interview or Assessment", text: "An interview with the family and/or an admissions assessment helps us understand the student." },
-      { icon: "folder", title: "Documentation", text: "Submit the documents and requirements needed to complete the process." },
-      { icon: "contract", title: "Enrollment", text: "Enroll and sign the educational services agreement to formalize admission." },
-    ],
-    requirementsTitle: "Requirements and Documentation",
-    transfers: "For Transfers",
-    requested: "The following documents are required:",
-    requirements: ["Report card", "Photo of the student's DNI", "Photos of both parents' DNI documents", "Certificate of no outstanding debt from the previous school"],
-    interviewAlt: "Admissions advisor speaking with a family",
-    questionsTitle: "Have Questions?",
-    questionsIntro: "Our admissions team is here to answer all your questions.",
-    phone: "Phone",
-    email: "Email",
-    finalStart: "Ready to take",
-    finalAccent: "the next step?",
-    finalText: "Schedule a visit or start your application and discover what Boston can offer your family.",
-    finalButton: "Start your application",
+    home: 'Home', admission: 'Admissions 2027', sideTitle: 'Explore admissions',
+    nav: { overview: 'New student admissions', process: 'How to apply', fees: 'School fees', vacancies: 'Available places' },
+    sideHelp: 'Need guidance?', sideHelpText: 'Our team can answer your questions before you apply.', sideHelpLink: 'Contact Admissions',
+    apply: 'Start an application', consult: 'Ask Admissions', more: 'Explore the process',
+    overview: {
+      eyebrow: 'YOUR JOURNEY STARTS HERE', title: 'A place to grow, learn and discover.',
+      intro: 'At Boston Bilingual School, we guide each family through the 2027 admissions process with care and clarity. Explore our Primary and Secondary programs and find the next step for your family.',
+      imageAlt: 'Admissions advisor speaking with a family', imageLabel: 'A community by your side',
+      levelsTitle: 'Learning for every stage',
+      primary: 'Primary', primaryText: 'A bilingual foundation and well-rounded education that spark curiosity and a love of learning.',
+      secondary: 'Secondary', secondaryText: 'Academic guidance and experiences that prepare students for the challenges ahead.',
+      pathwayTitle: 'Everything you need to know', pathwayIntro: 'Explore each section at your own pace. When you are ready, complete the admissions form at the end of this page.',
+      pathway: ['Review the steps and requirements.', 'Ask the school directly for financial information.', 'Check availability for the grade you need.'],
+      formEyebrow: 'NEXT STEP', formTitle: 'Begin your application', formText: 'Complete the admissions form and our team will get in touch.',
+    },
+    process: {
+      eyebrow: 'A CLEAR PATH', title: 'How to apply',
+      intro: 'We guide you through every stage. An interview or assessment takes place when applicable to the requested grade.',
+      steps: [
+        { title: 'Request information', text: 'Complete the admissions form so our team can learn about your interest and guide you.' },
+        { title: 'Interview or assessment', text: 'We speak with the family and, when applicable, conduct an admissions assessment.' },
+        { title: 'Documentation', text: 'Submit the requirements needed to continue the admissions process.' },
+        { title: 'Enrollment', text: 'Complete enrollment and sign the educational services agreement.' },
+      ],
+      tabsTitle: 'Guidance by level', primary: 'Primary', secondary: 'Secondary',
+      primaryText: 'Our team guides Primary families through the application, the interview or assessment where applicable, and the required documents.',
+      secondaryText: 'For Secondary, the admissions team explains the stages for the requested grade and supports the family through enrollment.',
+      transfersTitle: 'Transfer documentation', transfersIntro: 'Existing transfer requirements include:',
+      requirements: ['Report card', "Photo of the student's DNI", "Photos of both parents' DNI documents", 'Certificate of no outstanding debt from the previous school'],
+      requirementsNote: 'Confirm which documents apply to your case with Admissions before submitting them.',
+    },
+    fees: {
+      eyebrow: 'FINANCIAL INFORMATION', title: 'School fees',
+      intro: 'Enrollment costs, school fees, payment schedules and terms are confirmed directly with Admissions. We will guide you according to the level and grade you are interested in.',
+      cards: [
+        { title: 'Enrollment', text: 'Ask about the current amount and terms for formalizing enrollment.' },
+        { title: 'School fees', text: 'Request fee information for the level you are interested in.' },
+        { title: 'Schedule', text: 'Ask for the current payment calendar and applicable dates.' },
+      ],
+      tableTitle: 'Information by level', level: 'Level', tuition: 'Enrollment', pension: 'School fees',
+      primary: 'Primary', secondary: 'Secondary', onRequest: 'Information upon request',
+      conditionsTitle: 'Payment terms', conditionsText: 'The Admissions team will provide the current terms and payment schedule before enrollment is completed.',
+      note: 'Amounts are not shown without official confirmation from the school.',
+    },
+    vacancies: {
+      eyebrow: '2027 ENTRY', title: 'Available places',
+      intro: 'Availability may vary by level and grade. Contact Admissions for up-to-date information before starting your application.',
+      tabsTitle: 'Check by level', primary: 'Primary', secondary: 'Secondary', grade: 'Grade', availability: 'Availability', onRequest: 'Check availability',
+      primaryGrades: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'],
+      secondaryGrades: ['Secondary 1', 'Secondary 2', 'Secondary 3', 'Secondary 4', 'Secondary 5'],
+      noteTitle: 'Availability requires confirmation', note: 'This page does not state that places are confirmed. Our team will check availability for the grade you need.',
+    },
+    ctaTitle: 'We are here to help', ctaText: 'Tell us which grade you are interested in and we will guide you through the next step.',
   },
 } as const;
 const t = copy[lang];
+const navItems: Section[] = ['overview', 'process', 'fees', 'vacancies'];
+const current = t[section];
 ---
 
-<svg class="admissions-icons" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <symbol id="ad-people" viewBox="0 0 32 32"><circle cx="16" cy="9" r="4"/><path d="M8 25v-3a8 8 0 0 1 16 0v3H8Z"/><path d="M7 13a3 3 0 1 0-2-5.3M5 25H2v-3a6 6 0 0 1 5-6M25 13a3 3 0 1 0 2-5.3M27 25h3v-3a6 6 0 0 0-5-6"/></symbol>
-  <symbol id="ad-document" viewBox="0 0 32 32"><path d="M8 3h12l5 5v21H8V3Z"/><path d="M20 3v6h5M12 15h9M12 20h9M12 25h6"/></symbol>
-  <symbol id="ad-shield" viewBox="0 0 32 32"><path d="m16 2 11 4v8c0 8-4.5 12.5-11 16C9.5 26.5 5 22 5 14V6l11-4Z"/><path d="m11 16 3.5 3.5L22 12"/></symbol>
-  <symbol id="ad-chat" viewBox="0 0 32 32"><path d="M5 6h22v16H14l-7 5v-5H5V6Z"/><path d="M10 14h12M10 18h8"/></symbol>
-  <symbol id="ad-folder" viewBox="0 0 32 32"><path d="M3 8h10l3 3h13v17H3V8Z"/><path d="M3 15h26"/></symbol>
-  <symbol id="ad-contract" viewBox="0 0 32 32"><path d="M7 2h15l4 4v24H7V2Z"/><path d="M22 2v5h4M11 12h11M11 17h11M11 22h6"/><path d="m19 24 2 2 5-5"/></symbol>
-  <symbol id="ad-phone" viewBox="0 0 32 32"><path d="M7 3 3 7c0 10 12 22 22 22l4-4-7-7-4 4c-4-2-6-4-8-8l4-4-7-7Z"/></symbol>
-  <symbol id="ad-whatsapp" viewBox="0 0 32 32"><path d="M16 3a13 13 0 0 0-11 20L3 29l6-2a13 13 0 1 0 7-24Z"/><path d="M10 10c0 6 6 12 12 12l2-3-4-3-2 2c-2-1-3-2-4-4l2-2-3-4-3 2Z"/></symbol>
-  <symbol id="ad-mail" viewBox="0 0 32 32"><rect x="3" y="7" width="26" height="18" rx="2"/><path d="m4 9 12 9L28 9"/></symbol>
+<svg class="admission-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="admission-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="admission-book" viewBox="0 0 24 24"><path d="M12 5c-2-2-5-2-9-2v15c4 0 7 0 9 2 2-2 5-2 9-2V3c-4 0-7 0-9 2Zm0 0v15"/></symbol>
+  <symbol id="admission-cap" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Zm4 3v5c3 3 9 3 12 0v-5m4-3v7"/></symbol>
+  <symbol id="admission-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
 </svg>
 
-<section class="admissions-benefits" aria-label={lang === "es" ? "Beneficios del proceso de admisión" : "Admissions benefits"}>
-  <div class="container admissions-benefits__grid">
-    {t.benefits.map((item, index) => (
-      <article class="admissions-benefit" data-tone={index % 2 === 0 ? "blue" : "orange"}>
-        <span class="admissions-benefit__icon"><svg aria-hidden="true"><use href={`#ad-${item.icon}`}></use></svg></span>
-        <h2>{item.title}</h2>
-        <p>{item.text}</p>
-      </article>
-    ))}
-  </div>
-</section>
-
-<section class="admissions-process">
-  <div class="container">
-    <div class="admissions-heading"><h2>{t.processTitle}</h2><span aria-hidden="true"></span><p>{t.processIntro}</p></div>
-    <div class="admissions-process__grid">
-      {t.steps.map((step, index) => (
-        <article class="admissions-step">
-          <span class="admissions-step__number">{String(index + 1).padStart(2, "0")}</span>
-          <h3>{step.title}</h3>
-          <span class="admissions-step__icon"><svg aria-hidden="true"><use href={`#ad-${step.icon}`}></use></svg></span>
-          <p>{step.text}</p>
-        </article>
-      ))}
-    </div>
-  </div>
-</section>
-
-<section class="admissions-requirements">
-  <div class="container">
-    <div class="admissions-heading"><h2>{t.requirementsTitle}</h2><span aria-hidden="true"></span></div>
-    <div class="admissions-requirements__grid">
-      <div class="admissions-requirements__card">
-        <h3>{t.transfers}</h3>
-        <p>{t.requested}</p>
-        <ul>{t.requirements.map((item) => <li><span aria-hidden="true">✓</span>{item}</li>)}</ul>
+<section class:list={['admission-shell', { 'admission-shell--interior': section !== 'overview' }]}>
+  <div class="container admission-shell__grid">
+    <aside class="admission-side" aria-label={t.sideTitle}>
+      <div class="admission-side__heading"><span class="admission-side__mark"></span><span>{t.admission}</span></div>
+      <nav class="admission-nav" aria-label={t.sideTitle}>
+        {navItems.map((item, index) => (
+          <a href={routes[item]} class:list={['admission-nav__link', { 'is-active': section === item }]} aria-current={section === item ? 'page' : undefined}>
+            <span class="admission-nav__number">0{index + 1}</span><span>{t.nav[item]}</span>
+            <svg aria-hidden="true"><use href="#admission-arrow" /></svg>
+          </a>
+        ))}
+      </nav>
+      <div class="admission-side__help">
+        <span class="admission-side__help-icon">?</span>
+        <strong>{t.sideHelp}</strong>
+        <p>{t.sideHelpText}</p>
+        <a href={`/${lang}/contacto/`}>{t.sideHelpLink}<span aria-hidden="true">↗</span></a>
       </div>
-      <div class="admissions-requirements__photo">
-        <img src="/images/admisiones/admisiones-entrevista.webp" alt={t.interviewAlt} width="900" height="600" loading="lazy" decoding="async" />
-      </div>
+    </aside>
+
+    <div class="admission-main">
+      <nav class="admission-breadcrumb" aria-label={lang === 'es' ? 'Ruta de navegación' : 'Breadcrumb'}>
+        <a href={`/${lang}/`}>{t.home}</a><span aria-hidden="true">/</span>
+        {section === 'overview' ? <span aria-current="page">{t.admission}</span> : <><a href={base}>{t.admission}</a><span aria-hidden="true">/</span><span aria-current="page">{t.nav[section]}</span></>}
+      </nav>
+
+      {section === 'overview' && <>
+        <div class="admission-heading admission-heading--overview">
+          <span class="admission-eyebrow">{t.overview.eyebrow}</span>
+          <h2>{t.overview.title}</h2>
+          <p>{t.overview.intro}</p>
+          <a class="admission-button" href={applyHref}>{t.apply}<svg aria-hidden="true"><use href="#admission-arrow" /></svg></a>
+        </div>
+        <figure class="admission-feature-photo">
+          <img src="/images/admisiones/admisiones-entrevista.webp" alt={t.overview.imageAlt} width="900" height="600" loading="lazy" decoding="async" />
+          <figcaption><span></span>{t.overview.imageLabel}</figcaption>
+        </figure>
+        <section class="admission-block" aria-labelledby="levels-title">
+          <div class="admission-section-label"><span>01</span><h3 id="levels-title">{t.overview.levelsTitle}</h3></div>
+          <div class="admission-levels">
+            <article class="admission-level"><div class="admission-level__icon"><svg aria-hidden="true"><use href="#admission-book" /></svg></div><div><h4>{t.overview.primary}</h4><p>{t.overview.primaryText}</p></div></article>
+            <article class="admission-level"><div class="admission-level__icon"><svg aria-hidden="true"><use href="#admission-cap" /></svg></div><div><h4>{t.overview.secondary}</h4><p>{t.overview.secondaryText}</p></div></article>
+          </div>
+        </section>
+        <section class="admission-block" aria-labelledby="pathway-title">
+          <div class="admission-section-label"><span>02</span><h3 id="pathway-title">{t.overview.pathwayTitle}</h3></div>
+          <p class="admission-block__intro">{t.overview.pathwayIntro}</p>
+          <div class="admission-pathway">
+            {(['process', 'fees', 'vacancies'] as const).map((item, index) => (
+              <a href={routes[item]} class="admission-pathway__card"><span>0{index + 1}</span><h4>{t.nav[item]}</h4><p>{t.overview.pathway[index]}</p><svg aria-hidden="true"><use href="#admission-arrow" /></svg></a>
+            ))}
+          </div>
+        </section>
+        <section id="postulacion" class="admission-form-section" aria-labelledby="form-title">
+          <div class="admission-form-section__heading"><span class="admission-eyebrow">{t.overview.formEyebrow}</span><h3 id="form-title">{t.overview.formTitle}</h3><p>{t.overview.formText}</p></div>
+          <AdmissionsFormSimple lang={lang} variant="landing" />
+        </section>
+      </>}
+
+      {section !== 'overview' && <>
+        <div class="admission-heading admission-heading--interior">
+          <span class="admission-eyebrow">{current.eyebrow}</span>
+          <h1>{current.title}</h1>
+          <p>{current.intro}</p>
+        </div>
+
+        {section === 'process' && <>
+          <section class="admission-block" aria-label={t.process.title}>
+            <div class="admission-steps">
+              {t.process.steps.map((step, index) => (
+                <article class="admission-step"><span class="admission-step__number">0{index + 1}</span><div class="admission-step__line"></div><h2>{step.title}</h2><p>{step.text}</p></article>
+              ))}
+            </div>
+          </section>
+          <section class="admission-block" aria-labelledby="process-levels-title">
+            <div class="admission-section-label"><span>01</span><h2 id="process-levels-title">{t.process.tabsTitle}</h2></div>
+            <div class="admission-tabs" data-admission-tabs>
+              <div class="admission-tabs__list" role="tablist" aria-label={t.process.tabsTitle}>
+                <button type="button" role="tab" id="process-primary-tab" aria-controls="process-primary" aria-selected="true" tabindex="0">{t.process.primary}</button>
+                <button type="button" role="tab" id="process-secondary-tab" aria-controls="process-secondary" aria-selected="false" tabindex="-1">{t.process.secondary}</button>
+              </div>
+              <div class="admission-tabs__panel" role="tabpanel" id="process-primary" aria-labelledby="process-primary-tab"><div class="admission-tabs__icon"><svg aria-hidden="true"><use href="#admission-book" /></svg></div><p>{t.process.primaryText}</p></div>
+              <div class="admission-tabs__panel" role="tabpanel" id="process-secondary" aria-labelledby="process-secondary-tab" hidden><div class="admission-tabs__icon"><svg aria-hidden="true"><use href="#admission-cap" /></svg></div><p>{t.process.secondaryText}</p></div>
+            </div>
+          </section>
+          <section class="admission-block admission-transfer" aria-labelledby="transfer-title">
+            <div class="admission-section-label"><span>02</span><h2 id="transfer-title">{t.process.transfersTitle}</h2></div>
+            <p>{t.process.transfersIntro}</p>
+            <ul>{t.process.requirements.map((requirement) => <li><svg aria-hidden="true"><use href="#admission-check" /></svg>{requirement}</li>)}</ul>
+            <p class="admission-note">{t.process.requirementsNote}</p>
+          </section>
+        </>}
+
+        {section === 'fees' && <>
+          <section class="admission-block" aria-label={t.fees.title}>
+            <div class="admission-info-grid">
+              {t.fees.cards.map((card, index) => <article class="admission-info-card"><span>0{index + 1}</span><h2>{card.title}</h2><p>{card.text}</p></article>)}
+            </div>
+          </section>
+          <section class="admission-block" aria-labelledby="fees-table-title">
+            <div class="admission-section-label"><span>01</span><h2 id="fees-table-title">{t.fees.tableTitle}</h2></div>
+            <div class="admission-table-wrap"><table><thead><tr><th scope="col">{t.fees.level}</th><th scope="col">{t.fees.tuition}</th><th scope="col">{t.fees.pension}</th></tr></thead><tbody><tr><th scope="row">{t.fees.primary}</th><td>{t.fees.onRequest}</td><td>{t.fees.onRequest}</td></tr><tr><th scope="row">{t.fees.secondary}</th><td>{t.fees.onRequest}</td><td>{t.fees.onRequest}</td></tr></tbody></table></div>
+            <p class="admission-note">{t.fees.note}</p>
+          </section>
+          <section class="admission-block admission-highlight" aria-labelledby="conditions-title"><div class="admission-highlight__icon"><svg aria-hidden="true"><use href="#admission-check" /></svg></div><div><h2 id="conditions-title">{t.fees.conditionsTitle}</h2><p>{t.fees.conditionsText}</p></div></section>
+        </>}
+
+        {section === 'vacancies' && <>
+          <section class="admission-block" aria-labelledby="vacancies-table-title">
+            <div class="admission-section-label"><span>01</span><h2 id="vacancies-table-title">{t.vacancies.tabsTitle}</h2></div>
+            <div class="admission-tabs" data-admission-tabs>
+              <div class="admission-tabs__list" role="tablist" aria-label={t.vacancies.tabsTitle}>
+                <button type="button" role="tab" id="vacancies-primary-tab" aria-controls="vacancies-primary" aria-selected="true" tabindex="0">{t.vacancies.primary}</button>
+                <button type="button" role="tab" id="vacancies-secondary-tab" aria-controls="vacancies-secondary" aria-selected="false" tabindex="-1">{t.vacancies.secondary}</button>
+              </div>
+              <div class="admission-tabs__panel admission-tabs__panel--table" role="tabpanel" id="vacancies-primary" aria-labelledby="vacancies-primary-tab"><div class="admission-table-wrap"><table><thead><tr><th scope="col">{t.vacancies.grade}</th><th scope="col">{t.vacancies.availability}</th></tr></thead><tbody>{t.vacancies.primaryGrades.map((grade) => <tr><th scope="row">{grade}</th><td>{t.vacancies.onRequest}</td></tr>)}</tbody></table></div></div>
+              <div class="admission-tabs__panel admission-tabs__panel--table" role="tabpanel" id="vacancies-secondary" aria-labelledby="vacancies-secondary-tab" hidden><div class="admission-table-wrap"><table><thead><tr><th scope="col">{t.vacancies.grade}</th><th scope="col">{t.vacancies.availability}</th></tr></thead><tbody>{t.vacancies.secondaryGrades.map((grade) => <tr><th scope="row">{grade}</th><td>{t.vacancies.onRequest}</td></tr>)}</tbody></table></div></div>
+            </div>
+          </section>
+          <section class="admission-block admission-highlight" aria-labelledby="vacancies-note-title"><div class="admission-highlight__icon"><svg aria-hidden="true"><use href="#admission-check" /></svg></div><div><h2 id="vacancies-note-title">{t.vacancies.noteTitle}</h2><p>{t.vacancies.note}</p></div></section>
+        </>}
+
+        <section class="admission-cta" aria-label={t.ctaTitle}>
+          <div><span class="admission-eyebrow">{t.admission}</span><h2>{t.ctaTitle}</h2><p>{t.ctaText}</p></div>
+          <a class="admission-button admission-button--light" href={applyHref}>{t.apply}<svg aria-hidden="true"><use href="#admission-arrow" /></svg></a>
+        </section>
+      </>}
     </div>
   </div>
 </section>
 
-<section id="postulacion" class="admissions-apply">
-  <div class="container"><AdmissionsFormSimple lang={lang} variant="landing" /></div>
-</section>
-
-<section class="admissions-questions">
-  <div class="container">
-    <div class="admissions-heading"><h2>{t.questionsTitle}</h2><span aria-hidden="true"></span><p>{t.questionsIntro}</p></div>
-    <div class="admissions-questions__grid">
-      <a class="admissions-contact" href="tel:+51976586016" data-tone="blue"><span class="admissions-contact__icon"><svg aria-hidden="true"><use href="#ad-phone"></use></svg></span><h3>{t.phone}</h3><strong>+51 976 586 016</strong></a>
-      <a class="admissions-contact" href="https://wa.me/51976586016" target="_blank" rel="noopener noreferrer" data-tone="green"><span class="admissions-contact__icon"><svg aria-hidden="true"><use href="#ad-whatsapp"></use></svg></span><h3>WhatsApp</h3><strong>+51 976 586 016</strong></a>
-      <a class="admissions-contact" href="mailto:info@boston.edu.pe" data-tone="orange"><span class="admissions-contact__icon"><svg aria-hidden="true"><use href="#ad-mail"></use></svg></span><h3>{t.email}</h3><strong>info@boston.edu.pe</strong></a>
-    </div>
-  </div>
-</section>
-
-<section class="admissions-final image-band">
-  <img src="/images/admisiones/admisiones-cta.webp" alt="" width="1920" height="600" loading="lazy" decoding="async" />
-  <ImageBandShade />
-  <div class="admissions-final__orb" aria-hidden="true"></div>
-  <div class="container admissions-final__inner image-band__content">
-    <h2>{t.finalStart} <span>{t.finalAccent}</span></h2>
-    <p>{t.finalText}</p>
-    <a href="#postulacion">{t.finalButton}<span aria-hidden="true">→</span></a>
-  </div>
-</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-admission-tabs]').forEach((tabs) => {
+    const buttons = Array.from(tabs.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const select = (chosen: HTMLButtonElement) => {
+      buttons.forEach((button) => {
+        const active = button === chosen;
+        button.setAttribute('aria-selected', String(active));
+        button.tabIndex = active ? 0 : -1;
+        const panel = document.getElementById(button.getAttribute('aria-controls') || '');
+        if (panel) panel.hidden = !active;
+      });
+    };
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => select(button));
+      button.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        const next = buttons[(index + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length];
+        select(next);
+        next.focus();
+      });
+    });
+  });
+</script>
 
 <style>
-  .admissions-icons{position:absolute;width:0;height:0;overflow:hidden}
-  .admissions-benefits,.admissions-process,.admissions-requirements,.admissions-apply,.admissions-questions{position:relative;isolation:isolate}
-  .admissions-benefits{padding:0 0 70px;background:#fff}
-  .admissions-benefits__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
-  .admissions-benefit{min-height:226px;padding:29px 21px 26px;text-align:center;background:#fff;border-radius:24px;box-shadow:0 13px 35px rgba(16,91,164,.09)}
-  .admissions-benefit__icon,.admissions-step__icon,.admissions-contact__icon{display:grid;place-items:center;border-radius:50%;flex:none}
-  .admissions-benefit__icon{width:74px;height:74px;margin:0 auto 17px;background:#e9f3ff;color:#0870d8}
-  .admissions-benefit[data-tone="orange"] .admissions-benefit__icon{background:#fff0df;color:#ff9000}
-  .admissions-benefit__icon svg{width:37px;height:37px;fill:none;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
-  .admissions-benefit h2{margin:0 0 11px;color:#063c7e;font-size:1.04rem;font-weight:800;line-height:1.25}
-  .admissions-benefit p{max-width:24ch;margin:auto;color:#4e5360;font-size:.87rem;line-height:1.48}
-  .admissions-process{padding:48px 0 75px;background:linear-gradient(180deg,#f4f9ff,#f8fbff)}
-  .admissions-process::before,.admissions-apply::before{content:"";position:absolute;z-index:-1;width:390px;height:390px;border-radius:50%;background:#e8f3ff;left:-270px;top:-52px}
-  .admissions-heading{text-align:center;margin:0 auto 41px}
-  .admissions-heading h2{margin:0;color:#06417f;font-size:clamp(1.8rem,2.8vw,2.65rem);font-weight:800;line-height:1.16}
-  .admissions-heading>span{display:block;width:47px;height:3px;background:#ff9700;margin:13px auto 14px}
-  .admissions-heading p{margin:0;color:#5f6e80;font-size:1rem;line-height:1.45}
-  .admissions-process__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
-  .admissions-step{min-height:349px;padding:28px 26px 24px;background:#fff;border-radius:15px;box-shadow:0 12px 30px rgba(4,62,126,.065)}
-  .admissions-step__number{display:block;margin-bottom:8px;color:#ff9000;font-family:var(--font-heading);font-size:2.8rem;font-weight:800;line-height:1}
-  .admissions-step h3{min-height:51px;margin:0;color:#043d7d;font-size:1.14rem;font-weight:800;line-height:1.22}
-  .admissions-step__icon{width:63px;height:63px;margin:12px 0 17px;color:#f89000;background:#fff0df}
-  .admissions-step__icon svg{width:31px;height:31px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
-  .admissions-step p{margin:0;color:#424b58;font-size:.93rem;line-height:1.52}
-  .admissions-requirements{padding:70px 0 73px;background:#f8fbff}
-  .admissions-requirements::after{content:"";position:absolute;z-index:-1;width:450px;height:360px;border-radius:50%;background:#e8f3ff;right:-310px;top:20px}
-  .admissions-requirements__grid{display:grid;grid-template-columns:1.07fr .93fr;gap:25px;align-items:stretch}
-  .admissions-requirements__card{padding:32px 39px 24px;background:#fff;border-radius:22px;box-shadow:0 12px 34px rgba(3,62,126,.075)}
-  .admissions-requirements__card h3{margin:0 0 5px;color:#063e7f;font-size:1.35rem;font-weight:800}
-  .admissions-requirements__card>p{margin:0 0 16px;color:#ff8900;font-weight:700;font-size:.99rem}
-  .admissions-requirements__card ul{list-style:none;margin:0;padding:0}
-  .admissions-requirements__card li{display:flex;align-items:center;gap:16px;min-height:50px;border-bottom:1px solid #e7ebf0;color:#4a4e55;font-size:.96rem;line-height:1.3}
-  .admissions-requirements__card li:last-child{border:0}
-  .admissions-requirements__card li span{display:grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;background:#ff9800;color:#fff;font-size:.95rem;font-weight:800}
-  .admissions-requirements__photo{position:relative;min-height:344px}
-  .admissions-requirements__photo::after{content:"";position:absolute;z-index:-1;right:-22px;bottom:-11px;width:100px;height:100px;background:#ff9900;border-radius:50%}
-  .admissions-requirements__photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:22px}
-  .admissions-apply{padding:24px 0 66px;background:#f8fbff;scroll-margin-top:90px}
-  .admissions-apply::before{top:150px;left:-220px;width:500px;height:500px}
-  .admissions-apply::after{content:"";position:absolute;z-index:-1;right:-280px;bottom:15%;width:500px;height:500px;border-radius:50%;background:#eaf4ff}
-  .admissions-questions{padding:10px 0 77px;background:#fff}
-  .admissions-questions__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
-  .admissions-contact{display:flex;flex-direction:column;align-items:center;min-height:168px;padding:20px;text-align:center;text-decoration:none;background:#fff;border-radius:23px;box-shadow:0 11px 34px rgba(4,63,128,.08)}
-  .admissions-contact__icon{width:63px;height:63px;margin-bottom:11px;background:#1474d5;color:#fff}
-  .admissions-contact[data-tone="green"] .admissions-contact__icon{background:#28b963}
-  .admissions-contact[data-tone="orange"] .admissions-contact__icon{background:#ff9000}
-  .admissions-contact__icon svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
-  .admissions-contact h3{margin:0 0 3px;color:#073f81;font-size:1.05rem;font-weight:800}
-  .admissions-contact strong{color:#034080;font-family:var(--font-heading);font-size:1.13rem;font-weight:800}
-  .admissions-contact:hover{transform:translateY(-3px);box-shadow:0 15px 32px rgba(4,63,128,.13)}
-  .admissions-contact:focus-visible,.admissions-final a:focus-visible{outline:3px solid #ff9900;outline-offset:4px}
-  .admissions-final{position:relative;isolation:isolate;display:flex;align-items:center;min-height:320px;overflow:hidden;background:#06417f;color:#fff}
-  .admissions-final>img{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
-  .admissions-final__orb{position:absolute;z-index:-1;left:-110px;bottom:-150px;width:350px;height:350px;border-radius:50%;background:rgba(19,114,220,.5)}
-  .admissions-final__inner{width:100%;padding-top:40px;padding-bottom:43px}
-  .admissions-final h2{max-width:580px;margin:0 0 13px;color:#fff;font-size:clamp(2rem,3vw,2.75rem);font-weight:800;line-height:1.2}
-  .admissions-final h2 span{color:#ff9600}
-  .admissions-final p{max-width:515px;margin:0 0 24px;font-size:1.07rem;line-height:1.45}
-  .admissions-final a{display:inline-flex;align-items:center;gap:13px;min-height:51px;padding:12px 22px;border-radius:6px;background:#fff;color:#073f80;font-family:var(--font-accent);font-size:.91rem;font-weight:800;text-decoration:none;box-shadow:0 6px 16px rgba(0,0,0,.12)}
-  .admissions-final a:hover{background:#ecf6ff;transform:translateY(-2px)}
-  @media(max-width:900px){.admissions-benefits__grid,.admissions-process__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admissions-step{min-height:280px}.admissions-requirements__grid{grid-template-columns:1fr 1fr}.admissions-requirements__card{padding:27px}.admissions-questions__grid{gap:14px}.admissions-contact strong{font-size:.95rem}}
-  @media(max-width:640px){.admissions-benefits{padding-bottom:38px}.admissions-benefits__grid{gap:12px}.admissions-benefit{min-height:202px;padding:22px 11px}.admissions-benefit__icon{width:59px;height:59px;margin-bottom:13px}.admissions-benefit__icon svg{width:29px;height:29px}.admissions-benefit h2{font-size:.86rem}.admissions-benefit p{font-size:.76rem}.admissions-process{padding:42px 0 48px}.admissions-heading{margin-bottom:28px}.admissions-heading p{font-size:.9rem}.admissions-process__grid{grid-template-columns:1fr;gap:14px}.admissions-step{min-height:auto;padding:24px}.admissions-step h3{min-height:0}.admissions-step__icon{margin:13px 0}.admissions-requirements{padding:44px 0 51px}.admissions-requirements__grid{grid-template-columns:1fr;gap:17px}.admissions-requirements__card{padding:25px 22px}.admissions-requirements__card li{font-size:.85rem}.admissions-requirements__photo{height:240px;min-height:0}.admissions-apply{padding:20px 0 54px}.admissions-questions{padding:0 0 54px}.admissions-questions__grid{grid-template-columns:1fr;gap:13px}.admissions-contact{min-height:130px;padding:16px}.admissions-contact__icon{width:50px;height:50px;margin-bottom:6px}.admissions-contact__icon svg{width:26px;height:26px}.admissions-final{min-height:470px;align-items:flex-end}.admissions-final>img{object-position:71% 14%}.admissions-final__inner{padding-top:200px;padding-bottom:42px}.admissions-final h2{font-size:2rem}.admissions-final p{font-size:.9rem}}
-  @media(max-width:420px){
-    .admissions-benefit{min-height:0}
-    .admissions-heading h2{font-size:clamp(1.8rem,8vw,2.1rem)}
-    .admissions-contact strong{overflow-wrap:anywhere}
-  }
-  @media(max-width:640px){
-    .admissions-final{display:block;min-height:0}
-    .admissions-final>img{position:relative;z-index:0;inset:auto;display:block;height:var(--image-band-photo-height);object-position:71% 14%}
-    .admissions-final__inner{position:relative;z-index:2;padding-top:28px;padding-bottom:42px}
-  }
+  .admission-symbols{position:absolute;width:0;height:0;overflow:hidden}
+  .admission-shell{background:linear-gradient(180deg,#f7faff 0,#fff 36%);padding:66px 0 100px;color:#14324f}
+  .admission-shell--interior{padding-top:54px}
+  .admission-shell__grid{display:grid;grid-template-columns:246px minmax(0,1fr);gap:62px;align-items:start}
+  .admission-side{position:sticky;top:28px;padding:23px 0 0}
+  .admission-side__heading{display:flex;align-items:center;gap:11px;padding:0 16px 20px;color:#073b76;font:800 .88rem var(--font-heading);letter-spacing:.07em;text-transform:uppercase}
+  .admission-side__mark{width:7px;height:25px;background:#ff9900;border-radius:4px}
+  .admission-nav{display:grid;gap:5px;border-top:1px solid #dbe6f1;padding-top:14px}
+  .admission-nav__link{display:grid;grid-template-columns:29px 1fr 15px;align-items:center;gap:9px;min-height:60px;padding:11px 13px;border-radius:12px;color:#34526d;text-decoration:none;font-size:.89rem;font-weight:700;line-height:1.35;transition:background .2s,color .2s,transform .2s}
+  .admission-nav__link:hover{background:#eaf3fc;color:#003d82;transform:translateX(2px)}
+  .admission-nav__link.is-active{background:#e5f1ff;color:#003d82;box-shadow:inset 3px 0 #ff9900}
+  .admission-nav__number{color:#f49a18;font:800 .77rem var(--font-heading)}
+  .admission-nav__link svg,.admission-button svg,.admission-pathway__card svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .admission-nav__link svg{opacity:0;transition:opacity .2s}.admission-nav__link:hover svg,.admission-nav__link.is-active svg{opacity:1}
+  .admission-side__help{margin-top:32px;padding:25px 21px 23px;border-radius:17px;background:#073e7e;color:#fff;box-shadow:0 12px 25px rgba(5,54,110,.13)}
+  .admission-side__help-icon{display:grid;place-items:center;width:30px;height:30px;margin-bottom:16px;border:1px solid rgba(255,255,255,.55);border-radius:50%;font-weight:800}
+  .admission-side__help strong{font:800 1.02rem var(--font-heading)}.admission-side__help p{margin:8px 0 18px;color:#d7e7f9;font-size:.81rem;line-height:1.5}
+  .admission-side__help a{display:inline-flex;gap:7px;color:#ffb545;font-size:.81rem;font-weight:800;text-decoration:none}.admission-side__help a:hover{text-decoration:underline}
+  .admission-main{min-width:0}
+  .admission-breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:29px;color:#6a7c90;font-size:.82rem}.admission-breadcrumb a{color:#496d91;text-decoration:none}.admission-breadcrumb a:hover{text-decoration:underline}.admission-breadcrumb [aria-current]{color:#063f7e;font-weight:700}
+  .admission-eyebrow{display:block;color:#e88200;font:800 .76rem var(--font-heading);letter-spacing:.16em;text-transform:uppercase}
+  .admission-heading h1,.admission-heading h2{max-width:780px;margin:13px 0 18px;color:#053b78;font-size:clamp(2.2rem,3.4vw,3.5rem);font-weight:800;letter-spacing:-.045em;line-height:1.08}
+  .admission-heading p{max-width:760px;margin:0;color:#52677b;font-size:1.02rem;line-height:1.75}
+  .admission-heading--overview{padding-bottom:29px}.admission-heading--interior{padding-bottom:39px;border-bottom:1px solid #dae5f0;margin-bottom:35px}
+  .admission-button{display:inline-flex;align-items:center;justify-content:center;gap:17px;min-height:48px;margin-top:25px;padding:12px 22px;border-radius:9px;background:#ff9900;color:#fff;text-decoration:none;font-size:.88rem;font-weight:800;box-shadow:0 9px 18px rgba(242,142,0,.2);transition:transform .2s,background .2s,box-shadow .2s}
+  .admission-button:hover{background:#e88700;transform:translateY(-2px);box-shadow:0 12px 22px rgba(242,142,0,.25)}.admission-button:focus-visible,.admission-nav__link:focus-visible,.admission-tabs button:focus-visible,.admission-pathway__card:focus-visible{outline:3px solid #ff9900;outline-offset:3px}
+  .admission-feature-photo{position:relative;height:330px;overflow:hidden;margin:0 0 56px;border-radius:22px;background:#dceaf6;box-shadow:0 20px 42px rgba(6,56,111,.11)}
+  .admission-feature-photo img{width:100%;height:100%;object-fit:cover;object-position:center 45%}.admission-feature-photo figcaption{position:absolute;right:20px;bottom:20px;display:flex;align-items:center;gap:10px;padding:10px 15px;border-radius:9px;background:rgba(5,52,102,.92);color:#fff;font-size:.8rem;font-weight:700}.admission-feature-photo figcaption span{width:7px;height:7px;border-radius:50%;background:#ff9900}
+  .admission-block{margin:0 0 59px}.admission-section-label{display:flex;align-items:center;gap:16px;margin-bottom:21px}.admission-section-label>span{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:9px;background:#fff0d9;color:#e78700;font:800 .74rem var(--font-heading)}.admission-section-label h2,.admission-section-label h3{margin:0;color:#073e7c;font-size:clamp(1.3rem,1.8vw,1.65rem);font-weight:800;line-height:1.2}
+  .admission-levels{display:grid;grid-template-columns:1fr 1fr;gap:17px}.admission-level{display:flex;gap:18px;min-height:151px;padding:25px 21px;border:1px solid #e2eaf3;border-radius:16px;background:#fff;box-shadow:0 9px 24px rgba(9,62,118,.045)}
+  .admission-level__icon,.admission-tabs__icon{display:grid;place-items:center;flex:none;width:43px;height:43px;border-radius:12px;background:#e5f2ff;color:#0b64bb}.admission-level:nth-child(2) .admission-level__icon{background:#fff0dd;color:#ec8e00}.admission-level svg,.admission-tabs__icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .admission-level h4{margin:0 0 7px;color:#063e7d;font-size:1.04rem}.admission-level p{margin:0;color:#617387;font-size:.85rem;line-height:1.55}
+  .admission-block__intro{margin:-4px 0 20px;color:#607386;font-size:.94rem;line-height:1.65}.admission-pathway{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.admission-pathway__card{position:relative;min-height:179px;padding:22px 17px 35px;border:1px solid #e1eaf4;border-radius:14px;background:#fff;color:#203c56;text-decoration:none;transition:transform .2s,box-shadow .2s}.admission-pathway__card:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(8,61,116,.1)}.admission-pathway__card>span{color:#e78700;font:800 .75rem var(--font-heading)}.admission-pathway__card h4{margin:13px 0 7px;color:#073e7c;font-size:.97rem;line-height:1.25}.admission-pathway__card p{margin:0;color:#607387;font-size:.78rem;line-height:1.5}.admission-pathway__card svg{position:absolute;right:17px;bottom:15px;color:#e78700}
+  .admission-form-section{scroll-margin-top:90px;margin-top:72px;padding-top:42px;border-top:1px solid #dce6f0}.admission-form-section__heading{text-align:center}.admission-form-section__heading h3{margin:8px 0;color:#063e7d;font-size:clamp(1.65rem,2.4vw,2.25rem);font-weight:800}.admission-form-section__heading p{margin:0 0 23px;color:#607387;font-size:.91rem}
+  .admission-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.admission-step{position:relative;min-height:235px;padding:24px 18px;border:1px solid #e0e9f2;border-radius:15px;background:#fff;box-shadow:0 9px 24px rgba(9,62,118,.045)}.admission-step__number{display:block;margin-bottom:18px;color:#e88b00;font:800 2.15rem var(--font-heading);line-height:1}.admission-step__line{width:30px;height:3px;margin-bottom:16px;background:#ff9900;border-radius:2px}.admission-step h2{margin:0 0 8px;color:#073d79;font-size:.95rem;line-height:1.3}.admission-step p{margin:0;color:#617387;font-size:.78rem;line-height:1.55}
+  .admission-tabs{overflow:hidden;border:1px solid #dee8f2;border-radius:16px;background:#fff;box-shadow:0 10px 26px rgba(9,62,118,.04)}.admission-tabs__list{display:flex;gap:4px;padding:6px;border-bottom:1px solid #e1eaf4;background:#f5f9fd}.admission-tabs__list button{flex:1;min-height:45px;padding:10px 16px;border:0;border-radius:10px;background:transparent;color:#476781;font:800 .9rem var(--font-heading);cursor:pointer}.admission-tabs__list button[aria-selected="true"]{background:#063f7f;color:#fff;box-shadow:0 4px 12px rgba(3,61,127,.15)}.admission-tabs__panel{display:flex;align-items:center;gap:23px;min-height:125px;padding:27px 30px}.admission-tabs__panel[hidden]{display:none}.admission-tabs__panel p{max-width:650px;margin:0;color:#4f6478;font-size:.94rem;line-height:1.65}.admission-tabs__panel--table{display:block;padding:0}.admission-tabs__panel--table .admission-table-wrap{border:0;border-radius:0;box-shadow:none}
+  .admission-transfer{padding:26px 30px 18px;border:1px solid #e1eaf4;border-radius:17px;background:#fff}.admission-transfer>.admission-section-label{margin-bottom:14px}.admission-transfer>p{margin:0 0 17px;color:#52687b;font-size:.9rem}.admission-transfer ul{display:grid;grid-template-columns:1fr 1fr;gap:12px 21px;margin:0 0 17px;padding:0;list-style:none}.admission-transfer li{display:flex;align-items:start;gap:10px;color:#304d68;font-size:.87rem;line-height:1.5}.admission-transfer li svg{flex:none;width:17px;height:17px;margin-top:2px;fill:none;stroke:#ee9300;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.admission-transfer .admission-note{margin:0;padding-top:14px;border-top:1px solid #e6edf4;color:#687d91;font-size:.8rem}
+  .admission-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.admission-info-card{min-height:185px;padding:24px 20px;border:1px solid #e0e9f2;border-radius:15px;background:#fff}.admission-info-card>span{color:#e88b00;font:800 .78rem var(--font-heading)}.admission-info-card h2{margin:25px 0 8px;color:#073e7c;font-size:1.1rem}.admission-info-card p{margin:0;color:#607387;font-size:.82rem;line-height:1.55}
+  .admission-table-wrap{overflow-x:auto;border:1px solid #dce7f1;border-radius:14px;background:#fff;box-shadow:0 8px 22px rgba(8,61,116,.04)}.admission-table-wrap table{width:100%;border-collapse:collapse;text-align:left}.admission-table-wrap th,.admission-table-wrap td{padding:15px 19px;border-bottom:1px solid #e5edf5;font-size:.9rem}.admission-table-wrap thead th{background:#073f7d;color:#fff;font-size:.79rem;text-transform:uppercase;letter-spacing:.05em}.admission-table-wrap tbody th{color:#073d78;font-weight:800}.admission-table-wrap tbody td{color:#5b6d7e}.admission-table-wrap tbody tr:last-child th,.admission-table-wrap tbody tr:last-child td{border-bottom:0}.admission-table-wrap tbody tr:nth-child(even){background:#f8fbfe}.admission-note{margin:11px 0 0;color:#6c7f90;font-size:.81rem;line-height:1.5}
+  .admission-highlight{display:flex;align-items:start;gap:17px;padding:23px 25px;border-radius:15px;background:#eaf4ff}.admission-highlight__icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:#ff9900;color:#fff}.admission-highlight__icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}.admission-highlight h2{margin:0 0 6px;color:#063d79;font-size:1.09rem}.admission-highlight p{margin:0;color:#4d647a;font-size:.87rem;line-height:1.6}
+  .admission-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-top:71px;padding:31px 33px;border-radius:17px;background:linear-gradient(115deg,#073f7f,#0757a2);color:#fff}.admission-cta .admission-eyebrow{color:#ffb545}.admission-cta h2{margin:6px 0;color:#fff;font-size:1.52rem}.admission-cta p{margin:0;color:#dbeaff;font-size:.88rem}.admission-button--light{flex:none;margin:0;background:#ff9900;color:#fff}
+  @media(max-width:1080px){.admission-shell__grid{grid-template-columns:222px minmax(0,1fr);gap:35px}.admission-pathway{grid-template-columns:1fr 1fr}.admission-steps{grid-template-columns:1fr 1fr}.admission-step{min-height:180px}}
+  @media(max-width:760px){.admission-shell,.admission-shell--interior{padding:27px 0 70px}.admission-shell__grid{display:block}.admission-side{position:static;padding:0;margin-bottom:32px}.admission-side__heading{padding:0 0 10px}.admission-nav{display:flex;overflow-x:auto;gap:7px;padding:10px 0 5px;scrollbar-width:thin}.admission-nav__link{flex:0 0 180px;min-height:56px;grid-template-columns:22px 1fr;padding:9px 11px;font-size:.8rem}.admission-nav__link svg,.admission-side__help{display:none}.admission-breadcrumb{margin-bottom:19px}.admission-heading h1,.admission-heading h2{font-size:clamp(2rem,6vw,2.7rem)}.admission-feature-photo{height:260px;margin-bottom:42px}.admission-cta{align-items:start;flex-direction:column}.admission-button--light{margin:0}}
+  @media(max-width:520px){.admission-heading p{font-size:.91rem;line-height:1.65}.admission-levels,.admission-pathway,.admission-info-grid,.admission-steps,.admission-transfer ul{grid-template-columns:1fr}.admission-level{min-height:0}.admission-pathway__card{min-height:140px}.admission-step{min-height:0}.admission-transfer{padding:22px 20px}.admission-tabs__panel{align-items:start;flex-direction:column;gap:12px;padding:21px}.admission-tabs__panel--table{padding:0}.admission-table-wrap th,.admission-table-wrap td{padding:12px 11px;font-size:.76rem}.admission-table-wrap thead th{font-size:.7rem}.admission-feature-photo{height:215px}.admission-feature-photo figcaption{right:10px;bottom:10px;max-width:80%;font-size:.72rem}.admission-cta{padding:26px 22px}.admission-cta h2{font-size:1.35rem}}
 </style>
