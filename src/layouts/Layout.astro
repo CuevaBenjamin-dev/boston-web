@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import { Font } from "astro:assets";
+import { absoluteUrl, legacyCanonicalPaths, normalizePath, pageMetadata, translatedPath } from "../utils/seo.mjs";
 
 interface Props {
 	title?: string;
@@ -17,9 +18,34 @@ const {
 } = Astro.props;
 
 const langAttr = lang === "en" ? "en" : "es";
-const pageDescription = Astro.props.description ?? (lang === "en"
+const currentPath = normalizePath(Astro.url.pathname);
+const legacyPath = Object.hasOwn(legacyCanonicalPaths, currentPath);
+const canonicalPath = legacyCanonicalPaths[currentPath] ?? currentPath;
+const canonicalUrl = absoluteUrl(canonicalPath);
+const pageTitle = pageMetadata[currentPath]?.title ?? title;
+const pageDescription = pageMetadata[currentPath]?.description ?? Astro.props.description ?? (lang === "en"
 	? "Developing global citizens through academic excellence and internationally certified language education."
 	: "Formamos ciudadanos globales con excelencia académica y certificación internacional en idiomas.");
+const alternatePath = alternateLanguageHref ?? translatedPath[currentPath];
+const alternateUrl = !legacyPath && alternatePath ? absoluteUrl(alternatePath) : undefined;
+const esUrl = alternateUrl ? (langAttr === "es" ? canonicalUrl : alternateUrl) : undefined;
+const enUrl = alternateUrl ? (langAttr === "en" ? canonicalUrl : alternateUrl) : undefined;
+const schoolSchema = (currentPath === "/es/" || currentPath === "/en/") ? {
+	"@context": "https://schema.org",
+	"@type": "School",
+	name: "Boston Bilingual School",
+	url: absoluteUrl("/es/"),
+	logo: absoluteUrl("/logo.svg"),
+	telephone: "+51 976 586 016",
+	address: {
+		"@type": "PostalAddress",
+		streetAddress: "Calle San Andrés 307",
+		addressLocality: "Trujillo",
+		addressRegion: "La Libertad",
+		addressCountry: "PE",
+	},
+	sameAs: ["https://www.linkedin.com/company/boston-bilingual-school"],
+} : undefined;
 ---
 
 <html lang={langAttr}>
@@ -28,12 +54,25 @@ const pageDescription = Astro.props.description ?? (lang === "en"
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=bbs-1" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={pageDescription} />
+		{legacyPath && <meta name="robots" content="noindex,follow" />}
+		<link rel="canonical" href={canonicalUrl} />
+		{esUrl && <link rel="alternate" hreflang="es" href={esUrl} />}
+		{enUrl && <link rel="alternate" hreflang="en" href={enUrl} />}
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Boston Bilingual School" />
+		<meta property="og:locale" content={langAttr === "es" ? "es_PE" : "en_US"} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={absoluteUrl("/images/heroes/inicio-background.webp")} />
+		<meta name="twitter:card" content="summary_large_image" />
+		{schoolSchema && <script type="application/ld+json" set:html={JSON.stringify(schoolSchema)} />}
 		<meta name="generator" content={Astro.generator} />
 		<meta name="theme-color" content="#ff9900" />
 		<Font cssVariable="--astro-font-heading" preload={[{ weight: 900, subset: "latin" }]} />
 		<Font cssVariable="--astro-font-body" />
 		<Font cssVariable="--astro-font-accent" />
-		<title>{title}</title>
+		<title>{pageTitle}</title>
 		<style>
 			html {
 				scroll-behavior: smooth;

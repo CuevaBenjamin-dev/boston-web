@@ -1,10 +1,15 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
+import { legacyCanonicalPaths, normalizePath, siteUrl } from './src/utils/seo.mjs';
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [react()],
+	site: siteUrl,
+	integrations: [react(), sitemap({
+		filter: (page) => !Object.hasOwn(legacyCanonicalPaths, normalizePath(new URL(page).pathname)),
+	})],
 	prefetch: true,
 	build: { inlineStylesheets: 'always' },
 	fonts: [

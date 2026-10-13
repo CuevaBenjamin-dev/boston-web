@@ -1,6 +1,18 @@
 # Despliegue y prueba
 
-Los recursos actuales están en [configuracion-cloudflare.md](configuracion-cloudflare.md). Desde `integracion-produccion`, con Wrangler autenticado en la cuenta correcta:
+## Sitio institucional actual
+
+El repositorio privado del sitio es `CuevaBenjamin-dev/boston-web`. La rama de publicación es `main`. No hay un despliegue automático de GitHub configurado para el Worker. Publica manualmente desde la raíz del proyecto con Wrangler autenticado en la cuenta de Boston:
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm build
+pnpm exec wrangler deploy
+```
+
+El destino es el Worker existente `boston-web` con Static Assets en `./dist`, asociado a `https://bostonbbs.com`. Antes de compilar, configura `PUBLIC_API_URL` y `PUBLIC_TURNSTILE_SITE_KEY` con los valores vigentes de producción mediante un archivo `.env.production` ignorado por Git. No copies secretos al repositorio. Comprueba luego el sitio, los formularios, `https://bostonbbs.com/robots.txt` y `https://bostonbbs.com/sitemap-index.xml`. La verificación de propiedad y el envío del sitemap a Google Search Console son pasos manuales del propietario.
+
+Los recursos actuales están en [configuracion-cloudflare.md](configuracion-cloudflare.md). El siguiente procedimiento histórico abarca también API y CRM; no forma parte del despliegue habitual del sitio web:
 
 ```powershell
 cd api-worker

@@ -71,7 +71,7 @@ export const translations = {
       title: "Nuestras Instalaciones",
     },
     footer: {
-      title: "Boston Preuniversitario",
+      title: "Boston Bilingual School",
       description: "Formando ciudadanos globales con excelencia académica y valores sólidos",
       address: "Calle San Andrés 307, Trujillo, La Libertad, Perú",
       phone: "976 586 016",
@@ -241,7 +241,7 @@ export const translations = {
       title: "Our Facilities",
     },
     footer: {
-      title: "Boston Pre-University",
+      title: "Boston Bilingual School",
       description: "Forming global citizens with academic excellence and solid values",
       address: "San Andrés Street 307, Trujillo, La Libertad, Peru",
       phone: "976 586 016",
