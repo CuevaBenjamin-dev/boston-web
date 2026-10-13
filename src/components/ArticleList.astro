@@ -7,7 +7,7 @@ interface Props { lang: 'es' | 'en' }
 const { lang } = Astro.props;
 const articles = (await getCollection('articles'))
   .filter((article) => article.data.lang === lang)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 const copy = {
   es: { title: 'Blog de Noticias', subtitle: 'Artículos, eventos y logros académicos', readMore: 'Leer más', noArticles: 'No hay artículos disponibles.', categories: { académico: 'Académico', concurso: 'Concurso', evento: 'Evento', educativo: 'Educativo' } },
   en: { title: 'News Blog', subtitle: 'Articles, events and academic achievements', readMore: 'Read more', noArticles: 'No articles available.', categories: { académico: 'Academic', concurso: 'Competition', evento: 'Event', educativo: 'Education' } },
@@ -40,7 +40,7 @@ const categoryColors: Record<string, string> = {
                       <img src={article.data.image} alt={article.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                   )}
-                  <div class="p-6 md:w-2/3 flex flex-col justify-between">
+                  <div class:list={["p-6 flex flex-col justify-between", article.data.image ? "md:w-2/3" : "w-full"]}>
                     <div class="mb-3">
                       <span class={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${categoryColors[article.data.category]}`}>
                         {t.categories[article.data.category]}
@@ -49,9 +49,9 @@ const categoryColors: Record<string, string> = {
                     <h2 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{article.data.title}</h2>
                     <p class="text-gray-600 mb-4">{article.data.description}</p>
                     <div class="flex items-center justify-between">
-                      <time datetime={article.data.date.toISOString()} class="text-sm text-gray-500">
+                      {article.data.date && <time datetime={article.data.date.toISOString()} class="text-sm text-gray-500">
                         {article.data.date.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                      </time>
+                      </time>}
                       <a href={`/articulos/${article.id}`} class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-colors">
                         {t.readMore}
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

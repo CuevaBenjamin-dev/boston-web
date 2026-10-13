@@ -60,7 +60,7 @@ export const pageMetadata = {
     description: 'Learn about secondary education at Boston Bilingual School in Trujillo, including bilingual learning and preparation for university.',
   },
   '/es/admisiones/': {
-    title: 'Admisiones escolares 2027 en Trujillo | Boston Bilingual School',
+    title: 'Admisión 2027 en Trujillo | Boston Bilingual School',
     description: 'Conoce el proceso de admisión 2027 de Boston Bilingual School en Trujillo, los requisitos y cómo solicitar información o agendar una visita.',
   },
   '/en/admisiones/': {

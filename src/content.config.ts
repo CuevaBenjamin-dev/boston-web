@@ -6,7 +6,7 @@ const articles = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.date(),
+    date: z.date().optional(),
     category: z.enum(['académico', 'concurso', 'evento', 'educativo']),
     image: z.string().optional(),
     author: z.string().optional(),

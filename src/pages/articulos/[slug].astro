@@ -20,12 +20,12 @@ const { Content } = await render(article);
 
 const lang = article.data.lang as 'es' | 'en';
 const counterparts: Record<string, string> = {
-  'olimpiada-robotica-2024': 'robotics-olympiad-2024',
-  'robotics-olympiad-2024': 'olimpiada-robotica-2024',
-  'viaje-estudio-naturaleza': 'amazon-study-trip',
-  'amazon-study-trip': 'viaje-estudio-naturaleza',
-  'bilingüismo-ciudadania-global': 'bilingualism-global-citizenship',
-  'bilingualism-global-citizenship': 'bilingüismo-ciudadania-global',
+  'actividades-robotica-boston': 'boston-robotics-activities',
+  'boston-robotics-activities': 'actividades-robotica-boston',
+  'boston-dia-de-las-americas': 'boston-day-of-the-americas',
+  'boston-day-of-the-americas': 'boston-dia-de-las-americas',
+  'primera-escuela-de-familias': 'first-family-school',
+  'first-family-school': 'primera-escuela-de-familias',
 };
 const alternateLanguageHref = counterparts[article.id]
   ? `/articulos/${counterparts[article.id]}`
@@ -46,7 +46,7 @@ const categoryColors: Record<string, string> = {
 const breadcrumbText = lang === 'es' ? 'Volver a Noticias' : 'Back to News';
 ---
 
-<Layout title={article.data.title} lang={lang} alternateLanguageHref={alternateLanguageHref}>
+<Layout title={article.data.title} description={article.data.description} lang={lang} alternateLanguageHref={alternateLanguageHref}>
   <main>
     {/* Breadcrumb */}
     <div class="px-4 sm:px-6 lg:px-8 py-4 bg-gray-100">
@@ -80,14 +80,14 @@ const breadcrumbText = lang === 'es' ? 'Volver a Noticias' : 'Back to News';
         {/* Meta */}
         <div class="flex flex-col md:flex-row md:items-center md:justify-between text-gray-600 mb-8">
           <div class="flex items-center space-x-4 mb-4 md:mb-0">
-            <time datetime={article.data.date.toISOString()}>
+            {article.data.date && <time datetime={article.data.date.toISOString()}>
               {new Date(article.data.date).toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
               })}
-            </time>
-            {article.data.author && <span class="text-gray-500">•</span>}
+            </time>}
+            {article.data.date && article.data.author && <span class="text-gray-500">•</span>}
             {article.data.author && <span>{article.data.author}</span>}
           </div>
         </div>

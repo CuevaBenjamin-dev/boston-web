@@ -11,11 +11,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 const labels = {
   es: {
-    title: 'Ficha de Postulación Online',
+    title: 'Ficha de admisión',
     studentSection: 'Datos del Estudiante',
     studentName: 'Nombre del estudiante',
     studentAge: 'Edad',
-    grade: 'Grado al que postula',
+    grade: 'Grado al que desea ingresar',
     parentSection: 'Datos del Apoderado',
     parentName: 'Nombre completo',
     parentPhone: 'Teléfono',
@@ -24,16 +24,16 @@ const labels = {
     phone: 'Teléfono',
     whatsapp: 'WhatsApp',
     email: 'Email',
-    submit: 'Enviar Postulación',
-    success: '¡Postulación recibida! Nos contactaremos pronto.',
+    submit: 'Solicitar admisión',
+    success: '¡Solicitud de admisión recibida! Nos comunicaremos contigo pronto.',
     error: 'Error al enviar la postulación. Intenta nuevamente.',
   },
   en: {
-    title: 'Online Application Form',
+    title: 'Admission form',
     studentSection: 'Student Information',
     studentName: 'Student name',
     studentAge: 'Age',
-    grade: 'Grade applying for',
+    grade: 'Grade the student wishes to enter',
     parentSection: 'Parent/Guardian Information',
     parentName: 'Full name',
     parentPhone: 'Phone',
@@ -42,8 +42,8 @@ const labels = {
     phone: 'Phone',
     whatsapp: 'WhatsApp',
     email: 'Email',
-    submit: 'Submit Application',
-    success: 'Application received! We will contact you soon.',
+    submit: 'Request admission',
+    success: 'Admission request received! We will contact you soon.',
     error: 'Error sending application. Please try again.',
   },
 };
@@ -170,16 +170,16 @@ const t = labels[lang];
 
     const messages = {
       es: {
-        success: '¡Postulación recibida! Nos contactaremos pronto.',
+        success: '¡Solicitud de admisión recibida! Nos comunicaremos contigo pronto.',
         error: 'Error al enviar la postulación. Intenta nuevamente.',
         sending: 'Enviando...',
-        submit: 'Enviar Postulación',
+        submit: 'Solicitar admisión',
       },
       en: {
-        success: 'Application received! We will contact you soon.',
+        success: 'Admission request received! We will contact you soon.',
         error: 'Error sending application. Please try again.',
         sending: 'Sending...',
-        submit: 'Submit Application',
+        submit: 'Request admission',
       },
     };
 

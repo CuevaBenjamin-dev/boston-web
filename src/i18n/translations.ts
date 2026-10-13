@@ -5,21 +5,21 @@ export const translations = {
       about: "Nosotros",
       primaria: "Primaria",
       secundaria: "Secundaria",
-      admisiones: "Admisiones",
+      admisiones: "Admisión",
       contacto: "Contacto",
     },
     hero: {
       tagline: "Formamos ciudadanos globales",
       subtitle: "Formamos líderes globales con excelencia académica y valores sólidos",
-      cta1: "Admisiones 2027",
+      cta1: "Admisión 2027",
       cta2: "Agenda una Visita",
     },
     pillars: {
       title: "Pilares Educativos",
       subtitle: "Tres pilares que definen nuestra excelencia educativa",
       bilingualism: {
-        title: "Bilingüismo",
-        desc: "Enseñanza de inglés y francés con enfoque en certificación internacional, desde Primaria hasta Secundaria.",
+        title: "Inglés y francés",
+        desc: "Aprendizaje de inglés y francés desde Primaria hasta Secundaria, fortaleciendo las habilidades comunicativas y la proyección internacional de nuestros estudiantes",
       },
       innovation: {
         title: "Innovación",
@@ -86,13 +86,13 @@ export const translations = {
     },
     cta: {
       visit: "Agenda una Visita",
-      admissions: "Admisiones 2027",
+      admissions: "Admisión 2027",
     },
     aboutPage: {
       heroTitle: "Sobre Boston Bilingual School",
-      heroSubtitle: "Educación de calidad con visión de ciudadanía global desde 1990",
+      heroSubtitle: "Educación de calidad con un año de trayectoria y visión global",
       historyTitle: "Nuestra Historia y Propósito",
-      historyP1: "Boston Bilingual School es una institución educativa privada bilingüe preuniversitaria ubicada en una de las mejores zonas de Trujillo. Su infraestructura está diseñada cumpliendo con las Condiciones Básicas de Calidad estipuladas por el Ministerio de Educación (MINEDU).",
+      historyP1: "Con un año de trayectoria, Boston Bilingual School impulsa una propuesta educativa que combina la formación académica, la enseñanza de idiomas y el desarrollo integral de sus estudiantes.",
       historyP2: "Es un colegio inclusivo, no confesional y respetuoso de todas las creencias, que declara una postura neutral en asuntos de fe. Su identidad se define por una Visión de Ciudadanía Global: un modelo educativo interdisciplinario que integra los Temas Centrales de la UNESCO y los Objetivos de Desarrollo Sostenible (ODS), orientando el aprendizaje hacia la resolución de problemas del mundo real.",
       missionTitle: "Misión",
       missionText: "Somos una Institución Educativa Privada que atiende los niveles de Primaria y Secundaria de Educación Básica Regular. Desarrollamos competencias centradas en los enfoques transversales del Currículo Nacional, formando estudiantes listos para ser ciudadanos globales a través de una educación con estándares nacionales e internacionales, preparándolos para ingresar a las universidades más destacadas del Perú y del mundo.",
@@ -140,9 +140,9 @@ export const translations = {
     },
     aboutPage: {
       heroTitle: "About Boston Bilingual School",
-      heroSubtitle: "Quality education with a vision of global citizenship since 1990",
+      heroSubtitle: "Quality education with one year of experience and a global outlook",
       historyTitle: "Our History and Purpose",
-      historyP1: "Boston Bilingual School is a private bilingual pre-university educational institution located in one of the best areas of Trujillo. Its infrastructure is designed in compliance with the Basic Quality Conditions stipulated by the Ministry of Education (MINEDU).",
+      historyP1: "With one year of experience, Boston Bilingual School offers an educational approach that combines academic learning, language instruction and students' well-rounded development.",
       historyP2: "It is an inclusive, non-sectarian school that respects all beliefs and declares a neutral stance on matters of faith. Its identity is defined by a Vision of Global Citizenship: an interdisciplinary educational model that integrates UNESCO Central Themes and Sustainable Development Goals (SDGs), guiding learning toward solving real-world problems.",
       missionTitle: "Mission",
       missionText: "We are a Private Educational Institution that serves the levels of Primary and Secondary Basic Regular Education. We develop competencies focused on the transversal approaches of the National Curriculum, forming students ready to be global citizens through education with national and international standards, preparing them to enter the most outstanding universities in Peru and the world.",
@@ -188,8 +188,8 @@ export const translations = {
       title: "Educational Pillars",
       subtitle: "Three pillars that define our educational excellence",
       bilingualism: {
-        title: "Bilingualism",
-        desc: "English and French instruction with a focus on international certification, from Primary to Secondary.",
+        title: "English and French",
+        desc: "English and French instruction from Primary through Secondary School, strengthening students' communication skills and international outlook.",
       },
       innovation: {
         title: "Innovation",

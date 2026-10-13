@@ -30,7 +30,7 @@ const isActive = (href: string) => currentPath === hrefFor(href) || currentPath 
     </a>
 
     <nav class="header__nav" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
-      {links.map((link) => (
+      {links.filter((link) => link.href !== "/admisiones").map((link) => (
         <a href={hrefFor(link.href)} data-astro-prefetch class:list={["nav-link", { "nav-link--active": isActive(link.href) }]} aria-current={isActive(link.href) ? "page" : undefined}>
           {link.label}
         </a>

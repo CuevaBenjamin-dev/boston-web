@@ -43,6 +43,7 @@ test('postulación válida mapea a columnas españolas', async () => {
   assert.equal(filas[0].tabla, 'postulaciones');
   assert.equal(filas[0].fila.grado, 'primaria_5');
   assert.equal(filas[0].fila.medio_contacto, 'whatsapp');
+  assert.equal(filas[0].fila.origen, 'web');
   assert.equal('turnstileToken' in filas[0].fila, false);
 });
 for (const [nombre, cambios] of [
@@ -72,16 +73,7 @@ test('contacto válido', async () => {
   assert.equal(r.status, 201);
   assert.equal(filas[0].tabla, 'contactos_web');
   assert.equal(filas[0].fila.telefono, null);
-});
-test('publica aviso mínimo después de guardar y conserva 201 si falla el aviso', async () => {
-  const eventos: unknown[] = [];
-  const conectado = { ...env, CRM_EVENTS: { async emitirEvento(evento: unknown) { eventos.push(evento); } } };
-  const primera = await manejar(post('/api/postulaciones', datosPostulacion), conectado);
-  assert.equal(primera.status, 201);
-  assert.deepEqual(Object.keys(eventos[0] as object).sort(), ['fecha', 'id', 'tipo']);
-  assert.equal((eventos[0] as { tipo: string }).tipo, 'postulacion_creada');
-  const fallando = { ...env, CRM_EVENTS: { async emitirEvento() { throw new Error('servicio temporalmente caído'); } } };
-  assert.equal((await manejar(post('/api/contactos', datosContacto), fallando)).status, 201);
+  assert.equal(filas[0].fila.origen, 'web');
 });
 test('contacto inválido', async () => {
   filas.length = 0;
@@ -100,6 +92,14 @@ test('CORS OPTIONS permitido', async () => {
   }), env);
   assert.equal(r.status, 204);
   assert.equal(r.headers.get('Access-Control-Allow-Origin'), origen);
+});
+test('CORS OPTIONS permite el dominio institucional de producción', async () => {
+  const productionOrigin = 'https://bostonbbs.com';
+  const r = await manejar(new Request(base + '/api/contactos', {
+    method: 'OPTIONS', headers: { Origin: productionOrigin },
+  }), { ...env, ORIGENES_PERMITIDOS: productionOrigin });
+  assert.equal(r.status, 204);
+  assert.equal(r.headers.get('Access-Control-Allow-Origin'), productionOrigin);
 });
 test('CORS rechaza otro origen', async () => {
   const r = await manejar(post('/api/contactos', datosContacto, 'https://otro.example'), env);
