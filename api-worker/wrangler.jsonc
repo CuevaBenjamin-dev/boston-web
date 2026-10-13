@@ -11,9 +11,11 @@
   }],
   "vars": {
     "ORIGENES_PERMITIDOS": "https://bostonbbs.com,https://www.bostonbbs.com,https://boston-web.cueva-dev.workers.dev",
-    "TURNSTILE_HOSTNAMES": "bostonbbs.com,www.bostonbbs.com,boston-web.cueva-dev.workers.dev"
+    "TURNSTILE_HOSTNAMES": "bostonbbs.com,www.bostonbbs.com,boston-web.cueva-dev.workers.dev",
+    "VALANA_API_URL": "https://api.bostonbbs.com"
   },
+  "triggers": { "crons": ["*/5 * * * *"] },
   "secrets": {
-    "required": ["TURNSTILE_SECRET_KEY"]
+    "required": ["TURNSTILE_SECRET_KEY", "VALANA_INTEGRATION_TOKEN"]
   }
 }

@@ -144,7 +144,7 @@ const t = labels[lang];
       </div>
     </fieldset>
 
-    {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="postulacion" data-size="flexible"></div>}
+    {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="postulacion" data-size="flexible" data-appearance="interaction-only"></div>}
 
     {/* Message */}
     <div id="formMessage" class="form-message" role="status" aria-live="polite" style="display: none;"></div>
@@ -355,6 +355,13 @@ const t = labels[lang];
     background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
+  }
+
+  .form-message--success::before {
+    content: '✓';
+    color: #168a4a;
+    font-weight: 800;
+    margin-right: 0.5rem;
   }
 
   .form-message--error {

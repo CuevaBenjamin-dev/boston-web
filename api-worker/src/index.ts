@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { entregarValana, entregarPendientes } from './entregas-valana.ts';
 
 const grados = [
   'primaria_1', 'primaria_2', 'primaria_3', 'primaria_4', 'primaria_5', 'primaria_6',
@@ -20,10 +21,11 @@ const contacto = z.strictObject({
   language: z.enum(['es', 'en']), turnstileToken: token,
 });
 type Config = { DB: D1Database; TURNSTILE_SECRET_KEY: string; ORIGENES_PERMITIDOS: string;
-  TURNSTILE_HOSTNAMES: string };
+  TURNSTILE_HOSTNAMES: string; VALANA_API_URL?:string; VALANA_INTEGRATION_TOKEN?:string };
 type Fila = Record<string, string | number | null>;
 export type Guardar = (tabla: 'postulaciones' | 'contactos_web', fila: Fila, env: Config) => Promise<number>;
 export type Verificar = (token: string, accion: string, request: Request, env: Config) => Promise<boolean>;
+export type Entregar = (env:Config,tipo:'postulacion'|'contacto',id:number)=>Promise<void>;
 
 const guardarD1: Guardar = async (tabla, fila, env) => {
   if (tabla === 'postulaciones') {
@@ -90,8 +92,9 @@ async function leerJsonLimitado(request: Request): Promise<unknown> {
   catch { throw new Error('json_invalido'); }
 }
 
-export function crearManejador(guardar: Guardar = guardarD1, verificar: Verificar = verificarTurnstile) {
-  return async (request: Request, env: Config): Promise<Response> => {
+export function crearManejador(guardar: Guardar = guardarD1, verificar: Verificar = verificarTurnstile,
+  entregar:Entregar = entregarValana) {
+  return async (request: Request, env: Config,ctx?:ExecutionContext): Promise<Response> => {
     const ruta = new URL(request.url).pathname;
     const origen = request.headers.get('Origin');
     const permitidos = new Set((env.ORIGENES_PERMITIDOS || '').split(',').map((v) => v.trim()).filter(Boolean));
@@ -134,13 +137,15 @@ export function crearManejador(guardar: Guardar = guardarD1, verificar: Verifica
         if (!await verificar(p.turnstileToken, 'postulacion', request, env)) {
           return responder(403, { ok: false, error: 'Verificación de seguridad fallida' }, cors);
         }
-        await guardar('postulaciones', {
+        const id=await guardar('postulaciones', {
           nombre_estudiante: p.studentName, edad_estudiante: p.studentAge, grado: p.grade,
           nombre_apoderado: p.parentName, telefono_apoderado: p.parentPhone,
           correo_apoderado: p.parentEmail,
           medio_contacto: { phone: 'telefono', whatsapp: 'whatsapp', email: 'correo' }[p.preferredContact],
           idioma: p.language, origen: 'web',
         }, env);
+        const tarea=entregar(env,'postulacion',id).catch(()=>undefined);
+        if(ctx)ctx.waitUntil(tarea);else await tarea;
       } else {
         const validado = contacto.safeParse(cuerpo);
         if (!validado.success) return responder(400, { ok: false, error: 'Datos de contacto inválidos' }, cors);
@@ -148,10 +153,12 @@ export function crearManejador(guardar: Guardar = guardarD1, verificar: Verifica
         if (!await verificar(c.turnstileToken, 'contacto', request, env)) {
           return responder(403, { ok: false, error: 'Verificación de seguridad fallida' }, cors);
         }
-        await guardar('contactos_web', {
+        const id=await guardar('contactos_web', {
           nombre: c.name, correo: c.email, telefono: c.phone || null,
           asunto: c.subject, mensaje: c.message, idioma: c.language, origen: 'web',
         }, env);
+        const tarea=entregar(env,'contacto',id).catch(()=>undefined);
+        if(ctx)ctx.waitUntil(tarea);else await tarea;
       }
       return responder(201, { ok: true }, cors);
     } catch (error) {
@@ -167,4 +174,6 @@ export function crearManejador(guardar: Guardar = guardarD1, verificar: Verifica
   };
 }
 
-export default { fetch: crearManejador() } satisfies ExportedHandler<Env>;
+export default { fetch: crearManejador(), scheduled: async (_controller:ScheduledController,env:Config)=>{
+  await entregarPendientes(env);
+} } satisfies ExportedHandler<Env>;

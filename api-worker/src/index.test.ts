@@ -75,6 +75,26 @@ test('contacto válido', async () => {
   assert.equal(filas[0].fila.telefono, null);
   assert.equal(filas[0].fila.origen, 'web');
 });
+test('entrega el ID persistido a Valana sin exponerlo en la respuesta pública', async () => {
+  filas.length = 0;
+  const entregas: Array<{tipo:string;id:number}> = [];
+  const conEntrega = crearManejador(guardar, verificar, async (_entorno,tipo,id) => {
+    entregas.push({tipo,id});
+  });
+  const r = await conEntrega(post('/api/contactos', datosContacto), env);
+  assert.equal(r.status, 201);
+  assert.deepEqual(await r.json(), {ok:true});
+  assert.deepEqual(entregas, [{tipo:'contacto',id:1}]);
+});
+test('un fallo temporal de Valana no convierte en fallido el formulario ya guardado', async () => {
+  filas.length = 0;
+  const conFallo = crearManejador(guardar, verificar, async () => {
+    throw new Error('Valana no disponible');
+  });
+  const r = await conFallo(post('/api/postulaciones', datosPostulacion), env);
+  assert.equal(r.status, 201);
+  assert.equal(filas.length, 1);
+});
 test('contacto inválido', async () => {
   filas.length = 0;
   const r = await manejar(post('/api/contactos', { ...datosContacto, message: 'x' }), env);

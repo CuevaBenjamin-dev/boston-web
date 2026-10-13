@@ -24,7 +24,6 @@ const labels = {
     submit: 'Enviar Mensaje',
     success: '¡Mensaje enviado! Nos contactaremos pronto.',
     error: 'Error al enviar el mensaje. Intenta nuevamente.',
-    notice: 'Recibirás una confirmación aquí cuando el mensaje se haya enviado.',
     placeholder: {
       name: 'Ej: Juan Pérez',
       email: 'tu@email.com',
@@ -44,7 +43,6 @@ const labels = {
     submit: 'Send Message',
     success: 'Message sent! We will contact you soon.',
     error: 'Error sending message. Please try again.',
-    notice: 'A confirmation will appear here after your message has been sent.',
     placeholder: {
       name: 'Ex: John Doe',
       email: 'your@email.com',
@@ -126,12 +124,10 @@ const t = labels[lang];
       ></textarea>
     </div>
 
-    {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="contacto" data-size="flexible"></div>}
+    {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="contacto" data-size="flexible" data-appearance="interaction-only"></div>}
 
     {/* Message */}
     <div id="formMessage" class="form-message" role="status" aria-live="polite" style="display: none;"></div>
-
-    {variant === 'landing' && <p class="contact-form-notice"><span aria-hidden="true">✓</span>{t.notice}</p>}
 
     {/* Submit Button */}
     <button type="submit" class="submit-button" id="submitBtn">
@@ -361,6 +357,13 @@ const t = labels[lang];
     border: 1px solid #c3e6cb;
   }
 
+  .form-message--success::before {
+    content: '✓';
+    color: #168a4a;
+    font-weight: 800;
+    margin-right: 0.5rem;
+  }
+
   .form-message--error {
     background: #f8d7da;
     color: #721c24;
@@ -463,34 +466,6 @@ const t = labels[lang];
   .contact-form-wrapper--landing .form-group textarea {
     min-height: 174px;
     resize: vertical;
-  }
-
-  .contact-form-wrapper--landing .contact-form-notice {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    min-height: 53px;
-    padding: 11px 12px;
-    margin: 0;
-    border: 1px solid #e2e8ed;
-    border-radius: 7px;
-    background: #fafcfe;
-    color: #596371;
-    font-size: .78rem;
-    line-height: 1.35;
-  }
-
-  .contact-form-wrapper--landing .contact-form-notice span {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: 31px;
-    height: 31px;
-    border-radius: 50%;
-    background: #28ad62;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 800;
   }
 
   .contact-form-wrapper--landing .submit-button {
