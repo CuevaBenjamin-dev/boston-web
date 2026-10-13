@@ -13,9 +13,14 @@ export const grados = [
 export interface Postulacion {
   id: number;
   nombre_estudiante: string;
+  nombres_estudiante: string | null;
+  apellido_paterno_estudiante: string | null;
+  apellido_materno_estudiante: string | null;
+  institucion_procedencia: string | null;
   edad_estudiante: number;
   grado: string;
   nombre_apoderado: string;
+  parentesco_apoderado: string | null;
   telefono_apoderado: string;
   correo_apoderado: string;
   medio_contacto: string;

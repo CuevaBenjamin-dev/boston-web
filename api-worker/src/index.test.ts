@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { DatabaseSync } from 'node:sqlite';
 import { test } from 'node:test';
 import { crearManejador, type Guardar, type Verificar } from './index.ts';
 
@@ -25,6 +27,14 @@ const datosPostulacion = {
   parentEmail: 'luis@example.com', preferredContact: 'whatsapp', language: 'es',
   turnstileToken: 'token-valido',
 };
+const datosFichaNueva = {
+  studentFirstNames: 'Ana María', studentPaternalSurname: 'Pérez',
+  studentMaternalSurname: 'García', previousSchool: 'Colegio de ejemplo',
+  studentAge: '10', grade: 'primaria_5',
+  parentName: 'Luis Pérez', parentRelationship: 'Padre', parentPhone: '+51 976 586 016',
+  parentEmail: 'luis@example.com', preferredContact: 'whatsapp', language: 'es',
+  turnstileToken: 'token-valido',
+};
 const datosContacto = {
   name: 'Luis Pérez', email: 'luis@example.com', phone: '',
   subject: 'Vacantes', message: 'Quisiera información', language: 'es',
@@ -46,6 +56,71 @@ test('postulación válida mapea a columnas españolas', async () => {
   assert.equal(filas[0].fila.origen, 'web');
   assert.equal('turnstileToken' in filas[0].fila, false);
 });
+test('ficha nueva conserva los datos separados y el nombre compatible con Valana', async () => {
+  filas.length = 0;
+  const r = await manejar(post('/api/postulaciones', datosFichaNueva), env);
+  assert.equal(r.status, 201);
+  assert.equal(filas[0].fila.nombre_estudiante, 'Ana María Pérez García');
+  assert.equal(filas[0].fila.nombres_estudiante, 'Ana María');
+  assert.equal(filas[0].fila.apellido_paterno_estudiante, 'Pérez');
+  assert.equal(filas[0].fila.apellido_materno_estudiante, 'García');
+  assert.equal(filas[0].fila.institucion_procedencia, 'Colegio de ejemplo');
+  assert.equal(filas[0].fila.parentesco_apoderado, 'Padre');
+});
+test('cada estudiante genera una postulación nueva con el mismo apoderado', async () => {
+  filas.length = 0;
+  const segundo = { ...datosFichaNueva, studentFirstNames: 'Sofía', studentAge: '8', grade: 'primaria_3' };
+  assert.equal((await manejar(post('/api/postulaciones', datosFichaNueva), env)).status, 201);
+  assert.equal((await manejar(post('/api/postulaciones', segundo), env)).status, 201);
+  assert.equal(filas.length, 2);
+  assert.deepEqual(filas.map(({fila}) => fila.nombre_estudiante), ['Ana María Pérez García', 'Sofía Pérez García']);
+  assert.equal(filas[0].fila.correo_apoderado, filas[1].fila.correo_apoderado);
+});
+test('la migración 0004 guarda la ficha nueva y crea una entrega pendiente', async () => {
+  const sqlite = new DatabaseSync(':memory:');
+  for (const archivo of ['0001_inicial.sql', '0002_pendiente_evaluacion.sql',
+    '0003_entregas_valana.sql', '0004_datos_admision.sql']) {
+    sqlite.exec(readFileSync(new URL(`../migrations/${archivo}`, import.meta.url), 'utf8'));
+  }
+  const localDb = {
+    prepare(sql: string) {
+      return { bind(...valores: Array<string | number | null>) {
+        return { async run() {
+          const resultado = sqlite.prepare(sql).run(...valores);
+          return { meta: { last_row_id: Number(resultado.lastInsertRowid) } };
+        } };
+      } };
+    },
+  } as unknown as D1Database;
+  const local = crearManejador(undefined, verificar, async () => {});
+  const r = await local(post('/api/postulaciones', datosFichaNueva), { ...env, DB: localDb });
+  assert.equal(r.status, 201);
+  assert.deepEqual({ ...sqlite.prepare(`SELECT nombre_estudiante, nombres_estudiante,
+    apellido_paterno_estudiante, apellido_materno_estudiante, institucion_procedencia,
+    parentesco_apoderado FROM postulaciones`).get() }, {
+    nombre_estudiante: 'Ana María Pérez García', nombres_estudiante: 'Ana María',
+    apellido_paterno_estudiante: 'Pérez', apellido_materno_estudiante: 'García',
+    institucion_procedencia: 'Colegio de ejemplo', parentesco_apoderado: 'Padre',
+  });
+  const segundo = { ...datosFichaNueva, studentFirstNames: 'Sofía', studentAge: '8', grade: 'primaria_3' };
+  assert.equal((await local(post('/api/postulaciones', segundo), { ...env, DB: localDb })).status, 201);
+  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM postulaciones').get()?.total, 2);
+  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM entregas_valana').get()?.total, 2);
+  sqlite.close();
+});
+for (const [nombre, cambios] of [
+  ['nombres', { studentFirstNames: '' }],
+  ['apellido paterno', { studentPaternalSurname: '' }],
+  ['institución', { previousSchool: '' }],
+  ['parentesco', { parentRelationship: '' }],
+] as const) {
+  test(`ficha nueva rechaza ${nombre} vacío`, async () => {
+    filas.length = 0;
+    const r = await manejar(post('/api/postulaciones', { ...datosFichaNueva, ...cambios }), env);
+    assert.equal(r.status, 400);
+    assert.equal(filas.length, 0);
+  });
+}
 for (const [nombre, cambios] of [
   ['requerido', { studentName: '' }],
   ['email', { parentEmail: 'invalido' }],

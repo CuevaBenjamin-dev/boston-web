@@ -73,10 +73,15 @@ export function DetallePostulacion() {
         </select></label></div>
       <div className="panel datos">
         <dl>
+          {postulacion.nombres_estudiante && <div><dt>Nombres</dt><dd>{postulacion.nombres_estudiante}</dd></div>}
+          {postulacion.apellido_paterno_estudiante && <div><dt>Apellido paterno</dt><dd>{postulacion.apellido_paterno_estudiante}</dd></div>}
+          {postulacion.apellido_materno_estudiante && <div><dt>Apellido materno</dt><dd>{postulacion.apellido_materno_estudiante}</dd></div>}
           <div><dt>Edad</dt><dd>{postulacion.edad_estudiante}</dd></div>
           <div><dt>Grado</dt><dd>{grado(postulacion.grado)}</dd></div>
+          {postulacion.institucion_procedencia && <div><dt>Institución de procedencia</dt><dd>{postulacion.institucion_procedencia}</dd></div>}
           <div><dt>Apoderado</dt><dd>{postulacion.nombre_apoderado}</dd></div>
-          <div><dt>Teléfono</dt><dd>{postulacion.telefono_apoderado}</dd></div>
+          {postulacion.parentesco_apoderado && <div><dt>Parentesco</dt><dd>{postulacion.parentesco_apoderado}</dd></div>}
+          <div><dt>Celular</dt><dd>{postulacion.telefono_apoderado}</dd></div>
           <div><dt>Correo</dt><dd><a href={`mailto:${postulacion.correo_apoderado}`}>{postulacion.correo_apoderado}</a></dd></div>
           <div><dt>Medio preferido</dt><dd>{postulacion.medio_contacto}</dd></div>
           <div><dt>Idioma</dt><dd>{postulacion.idioma}</dd></div>

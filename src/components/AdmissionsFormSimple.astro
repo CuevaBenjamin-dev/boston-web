@@ -13,37 +13,55 @@ const labels = {
   es: {
     title: 'Ficha de admisión',
     studentSection: 'Datos del Estudiante',
-    studentName: 'Nombre del estudiante',
+    studentFirstNames: 'Nombres',
+    studentPaternalSurname: 'Apellido paterno',
+    studentMaternalSurname: 'Apellido materno',
     studentAge: 'Edad',
     grade: 'Grado al que desea ingresar',
+    previousSchool: 'Institución educativa de procedencia',
+    previousSchoolHint: 'Si aún no asiste a una institución, escribe “No aplica”.',
     parentSection: 'Datos del Apoderado',
     parentName: 'Nombre completo',
-    parentPhone: 'Teléfono',
+    parentRelationship: 'Parentesco con el estudiante',
+    parentPhone: 'Celular',
     parentEmail: 'Correo electrónico',
     preferredContact: 'Medio de contacto preferido',
-    phone: 'Teléfono',
+    phone: 'Celular',
     whatsapp: 'WhatsApp',
     email: 'Email',
+    anotherChild: 'Registraré a otro estudiante después de este envío',
+    anotherChildHint: 'Conservaremos los datos del apoderado y podrás completar los del siguiente estudiante.',
+    nextStudent: 'Completar siguiente estudiante',
     submit: 'Solicitar admisión',
     success: '¡Solicitud de admisión recibida! Nos comunicaremos contigo pronto.',
+    successNext: '¡Solicitud recibida! Conservamos los datos del apoderado. Completa ahora los del siguiente estudiante.',
     error: 'Error al enviar la postulación. Intenta nuevamente.',
   },
   en: {
     title: 'Admission form',
     studentSection: 'Student Information',
-    studentName: 'Student name',
+    studentFirstNames: 'Given names',
+    studentPaternalSurname: 'Paternal surname',
+    studentMaternalSurname: 'Maternal surname',
     studentAge: 'Age',
     grade: 'Grade the student wishes to enter',
+    previousSchool: 'Previous school or institution',
+    previousSchoolHint: 'If the student has not attended one, enter “Not applicable”.',
     parentSection: 'Parent/Guardian Information',
     parentName: 'Full name',
-    parentPhone: 'Phone',
+    parentRelationship: 'Relationship to the student',
+    parentPhone: 'Mobile number',
     parentEmail: 'Email address',
     preferredContact: 'Preferred contact method',
-    phone: 'Phone',
+    phone: 'Mobile call',
     whatsapp: 'WhatsApp',
     email: 'Email',
+    anotherChild: 'I will register another student after this submission',
+    anotherChildHint: 'We will keep the parent/guardian details so you can enter the next student.',
+    nextStudent: 'Enter next student',
     submit: 'Request admission',
     success: 'Admission request received! We will contact you soon.',
+    successNext: 'Request received! Your parent/guardian details remain. Now enter the next student.',
     error: 'Error sending application. Please try again.',
   },
 };
@@ -60,14 +78,22 @@ const t = labels[lang];
       <legend class="section-title">{t.studentSection}</legend>
 
       <div class="form-group">
-        <label for="studentName">{t.studentName} *</label>
-        <input
-          type="text"
-          id="studentName"
-          name="studentName"
-          placeholder={lang === 'es' ? 'Ej: Juan Pérez' : 'Ex: John Doe'}
-          required
-        />
+        <label for="studentFirstNames">{t.studentFirstNames} *</label>
+        <input type="text" id="studentFirstNames" name="studentFirstNames" minlength="2" maxlength="50"
+          autocomplete="given-name" placeholder={lang === 'es' ? 'Ej: Juan Carlos' : 'Ex: John Michael'} required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="studentPaternalSurname">{t.studentPaternalSurname} *</label>
+          <input type="text" id="studentPaternalSurname" name="studentPaternalSurname" minlength="2" maxlength="40"
+            placeholder={lang === 'es' ? 'Ej: Pérez' : 'Ex: Pérez'} required />
+        </div>
+        <div class="form-group">
+          <label for="studentMaternalSurname">{t.studentMaternalSurname}</label>
+          <input type="text" id="studentMaternalSurname" name="studentMaternalSurname" minlength="2" maxlength="40"
+            placeholder={lang === 'es' ? 'Ej: García (si corresponde)' : 'Ex: García (if applicable)'} />
+        </div>
       </div>
 
       <div class="form-row">
@@ -93,6 +119,13 @@ const t = labels[lang];
           </select>
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="previousSchool">{t.previousSchool} *</label>
+        <input type="text" id="previousSchool" name="previousSchool" minlength="2" maxlength="150"
+          placeholder={lang === 'es' ? 'Colegio, nido o institución' : 'School or institution'} required />
+        <small class="form-hint">{t.previousSchoolHint}</small>
+      </div>
     </fieldset>
 
     {/* Parent Section */}
@@ -110,6 +143,12 @@ const t = labels[lang];
         />
       </div>
 
+      <div class="form-group">
+        <label for="parentRelationship">{t.parentRelationship} *</label>
+        <input type="text" id="parentRelationship" name="parentRelationship" minlength="2" maxlength="60"
+          placeholder={lang === 'es' ? 'Ej: madre, padre o tutor(a)' : 'Ex: mother, father or guardian'} required />
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label for="parentPhone">{t.parentPhone} *</label>
@@ -118,6 +157,7 @@ const t = labels[lang];
             id="parentPhone"
             name="parentPhone"
             placeholder="+51 976 586 016"
+            autocomplete="tel"
             required
           />
         </div>
@@ -144,10 +184,16 @@ const t = labels[lang];
       </div>
     </fieldset>
 
+    <div class="additional-student">
+      <label for="anotherChild"><input type="checkbox" id="anotherChild" name="anotherChild" /><span>{t.anotherChild}</span></label>
+      <p>{t.anotherChildHint}</p>
+    </div>
+
     {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-action="postulacion" data-size="flexible" data-appearance="interaction-only"></div>}
 
     {/* Message */}
     <div id="formMessage" class="form-message" role="status" aria-live="polite" style="display: none;"></div>
+    <button type="button" class="next-student-button" id="nextStudentBtn" hidden>{t.nextStudent}</button>
 
     {/* Submit Button */}
     <button type="submit" class="submit-button" id="submitBtn">
@@ -157,52 +203,66 @@ const t = labels[lang];
 </div>
 
 {turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
-<script define:vars={{ lang, apiBaseUrl, turnstileSiteKey }}>
+<script define:vars={{ lang, apiBaseUrl, turnstileSiteKey }} data-astro-rerun>
   function initForm() {
     const form = document.getElementById('admissionsForm');
     const submitBtn = document.getElementById('submitBtn');
     const messageDiv = document.getElementById('formMessage');
+    const nextStudentBtn = document.getElementById('nextStudentBtn');
 
     if (!form) {
       console.error('Formulario no encontrado');
       return;
     }
+    if (form.dataset.initialized) return;
+    form.dataset.initialized = 'true';
 
     const messages = {
       es: {
         success: '¡Solicitud de admisión recibida! Nos comunicaremos contigo pronto.',
+        successNext: '¡Solicitud recibida! Conservamos los datos del apoderado. Completa ahora los del siguiente estudiante.',
         error: 'Error al enviar la postulación. Intenta nuevamente.',
         sending: 'Enviando...',
         submit: 'Solicitar admisión',
       },
       en: {
         success: 'Admission request received! We will contact you soon.',
+        successNext: 'Request received! Your parent/guardian details remain. Now enter the next student.',
         error: 'Error sending application. Please try again.',
         sending: 'Sending...',
         submit: 'Request admission',
       },
     };
 
+    nextStudentBtn.addEventListener('click', () => {
+      document.getElementById('studentFirstNames')?.focus();
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const formData = new FormData(form);
       const data = {
-        studentName: formData.get('studentName'),
+        studentFirstNames: formData.get('studentFirstNames'),
+        studentPaternalSurname: formData.get('studentPaternalSurname'),
+        studentMaternalSurname: formData.get('studentMaternalSurname'),
         studentAge: formData.get('studentAge'),
         grade: formData.get('grade'),
+        previousSchool: formData.get('previousSchool'),
         parentName: formData.get('parentName'),
+        parentRelationship: formData.get('parentRelationship'),
         parentPhone: formData.get('parentPhone'),
         parentEmail: formData.get('parentEmail'),
         preferredContact: formData.get('preferredContact'),
         language: lang,
         turnstileToken: formData.get('cf-turnstile-response'),
       };
-
+      const anotherChild = formData.get('anotherChild') === 'on';
 
       submitBtn.disabled = true;
       submitBtn.textContent = messages[lang].sending;
       messageDiv.style.display = 'none';
+      nextStudentBtn.hidden = true;
 
       if (!apiBaseUrl || !turnstileSiteKey) {
         messageDiv.className = 'form-message form-message--error';
@@ -234,10 +294,18 @@ const t = labels[lang];
 
         const result = await response.json();
 
-        if (response.ok) {
+        if (response.ok && result.ok === true) {
           messageDiv.className = 'form-message form-message--success';
-          messageDiv.textContent = messages[lang].success;
+          messageDiv.textContent = anotherChild ? messages[lang].successNext : messages[lang].success;
           form.reset();
+          if (anotherChild) {
+            for (const field of ['parentName', 'parentRelationship', 'parentPhone', 'parentEmail', 'preferredContact']) {
+              const control = form.elements.namedItem(field);
+              if (control) control.value = data[field];
+            }
+            form.elements.namedItem('anotherChild').checked = true;
+            nextStudentBtn.hidden = false;
+          }
         } else {
           messageDiv.className = 'form-message form-message--error';
           messageDiv.textContent = result.error || messages[lang].error;
@@ -326,6 +394,57 @@ const t = labels[lang];
     font-weight: 600;
     font-size: 0.9rem;
   }
+
+  .form-hint {
+    color: #617387;
+    font-size: .78rem;
+    line-height: 1.4;
+  }
+
+  .additional-student {
+    padding: 18px 20px;
+    border: 1px solid #dce7f1;
+    border-radius: 10px;
+    background: #f7faff;
+  }
+
+  .additional-student label {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    color: #063e7d;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .additional-student input {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    accent-color: #ff9900;
+  }
+
+  .additional-student p {
+    margin: 8px 0 0 29px;
+    color: #617387;
+    font-size: .8rem;
+    line-height: 1.45;
+  }
+
+  .next-student-button {
+    padding: 11px 15px;
+    border: 1px solid #06417f;
+    border-radius: 7px;
+    background: #fff;
+    color: #06417f;
+    font: 700 .88rem var(--font-accent);
+    cursor: pointer;
+  }
+
+  .next-student-button[hidden] { display: none; }
+  .next-student-button:focus-visible { outline: 3px solid #ff9900; outline-offset: 3px; }
 
   .form-group input,
   .form-group select {

@@ -10,10 +10,33 @@ const correo = z.string().trim().email().max(254);
 const telefono = texto(7, 25).regex(/^\+?[0-9\s()\-]{7,25}$/);
 const token = z.string().min(1).max(2048);
 const postulacion = z.strictObject({
-  studentName: texto(2, 120), studentAge: z.coerce.number().int().min(5).max(18),
+  studentName: texto(2, 120).optional(),
+  studentFirstNames: texto(2, 50).optional(),
+  studentPaternalSurname: texto(2, 40).optional(),
+  studentMaternalSurname: z.union([texto(2, 40), z.literal('')]).optional(),
+  previousSchool: texto(2, 150).optional(),
+  studentAge: z.coerce.number().int().min(5).max(18),
   grade: z.enum(grados), parentName: texto(2, 120), parentPhone: telefono,
+  parentRelationship: texto(2, 60).optional(),
   parentEmail: correo, preferredContact: z.enum(['phone', 'whatsapp', 'email']),
   language: z.enum(['es', 'en']), turnstileToken: token,
+}).superRefine((datos, ctx) => {
+  const fichaNueva = [datos.studentFirstNames, datos.studentPaternalSurname,
+    datos.studentMaternalSurname, datos.previousSchool, datos.parentRelationship]
+    .some((valor) => valor !== undefined);
+  if (!fichaNueva) {
+    if (!datos.studentName) ctx.addIssue({ code: 'custom', path: ['studentName'], message: 'Nombre requerido' });
+    return;
+  }
+  for (const campo of ['studentFirstNames', 'studentPaternalSurname', 'previousSchool',
+    'parentRelationship'] as const) {
+    if (!datos[campo]) ctx.addIssue({ code: 'custom', path: [campo], message: 'Campo requerido' });
+  }
+  const nombreCompleto = [datos.studentFirstNames, datos.studentPaternalSurname,
+    datos.studentMaternalSurname].filter(Boolean).join(' ');
+  if (nombreCompleto.length > 120) {
+    ctx.addIssue({ code: 'custom', path: ['studentFirstNames'], message: 'Nombre completo demasiado largo' });
+  }
 });
 const contacto = z.strictObject({
   name: texto(2, 120), email: correo, phone: z.union([telefono, z.literal('')]).optional(),
@@ -31,10 +54,14 @@ const guardarD1: Guardar = async (tabla, fila, env) => {
   if (tabla === 'postulaciones') {
     const resultado = await env.DB.prepare(`INSERT INTO postulaciones
       (nombre_estudiante, edad_estudiante, grado, nombre_apoderado, telefono_apoderado,
-       correo_apoderado, medio_contacto, idioma, origen)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+       correo_apoderado, medio_contacto, idioma, origen, nombres_estudiante,
+       apellido_paterno_estudiante, apellido_materno_estudiante, institucion_procedencia,
+       parentesco_apoderado)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
       fila.nombre_estudiante, fila.edad_estudiante, fila.grado, fila.nombre_apoderado,
       fila.telefono_apoderado, fila.correo_apoderado, fila.medio_contacto, fila.idioma, 'web',
+      fila.nombres_estudiante, fila.apellido_paterno_estudiante, fila.apellido_materno_estudiante,
+      fila.institucion_procedencia, fila.parentesco_apoderado,
     ).run();
     return Number(resultado.meta.last_row_id);
   } else {
@@ -138,7 +165,15 @@ export function crearManejador(guardar: Guardar = guardarD1, verificar: Verifica
           return responder(403, { ok: false, error: 'Verificación de seguridad fallida' }, cors);
         }
         const id=await guardar('postulaciones', {
-          nombre_estudiante: p.studentName, edad_estudiante: p.studentAge, grado: p.grade,
+          nombre_estudiante: p.studentFirstNames
+            ? [p.studentFirstNames, p.studentPaternalSurname, p.studentMaternalSurname].filter(Boolean).join(' ')
+            : p.studentName!,
+          nombres_estudiante: p.studentFirstNames ?? null,
+          apellido_paterno_estudiante: p.studentPaternalSurname ?? null,
+          apellido_materno_estudiante: p.studentMaternalSurname || null,
+          institucion_procedencia: p.previousSchool ?? null,
+          parentesco_apoderado: p.parentRelationship ?? null,
+          edad_estudiante: p.studentAge, grado: p.grade,
           nombre_apoderado: p.parentName, telefono_apoderado: p.parentPhone,
           correo_apoderado: p.parentEmail,
           medio_contacto: { phone: 'telefono', whatsapp: 'whatsapp', email: 'correo' }[p.preferredContact],

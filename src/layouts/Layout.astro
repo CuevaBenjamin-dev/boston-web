@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 import { absoluteUrl, legacyCanonicalPaths, normalizePath, pageMetadata, translatedPath } from "../utils/seo.mjs";
 
 interface Props {
@@ -19,6 +20,7 @@ const {
 
 const langAttr = lang === "en" ? "en" : "es";
 const currentPath = normalizePath(Astro.url.pathname);
+const admissionsRoute = /^\/(es|en)\/admisiones\//.test(currentPath);
 const legacyPath = Object.hasOwn(legacyCanonicalPaths, currentPath);
 const canonicalPath = legacyCanonicalPaths[currentPath] ?? currentPath;
 const canonicalUrl = absoluteUrl(canonicalPath);
@@ -48,7 +50,7 @@ const schoolSchema = (currentPath === "/es/" || currentPath === "/en/") ? {
 } : undefined;
 ---
 
-<html lang={langAttr}>
+<html lang={langAttr} transition:animate={admissionsRoute ? 'none' : undefined}>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=bbs-1" />
@@ -73,6 +75,7 @@ const schoolSchema = (currentPath === "/es/" || currentPath === "/en/") ? {
 		<Font cssVariable="--astro-font-body" />
 		<Font cssVariable="--astro-font-accent" />
 		<title>{pageTitle}</title>
+		{admissionsRoute && <ClientRouter fallback="swap" />}
 		<style>
 			html {
 				scroll-behavior: smooth;

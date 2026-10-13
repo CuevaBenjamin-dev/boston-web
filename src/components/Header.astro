@@ -23,7 +23,7 @@ const hrefFor = (href: string) => `/${lang}${href === "/" ? "" : href}`;
 const isActive = (href: string) => currentPath === hrefFor(href) || currentPath === href;
 ---
 
-<header class="header">
+<header class="header" transition:persist={/^\/(es|en)\/admisiones\/?/.test(currentPath) ? 'admissions-header' : undefined}>
   <div class="container header__inner">
     <a href={`/${lang}`} class="header__logo" data-astro-prefetch>
       <img src="/logo.svg" alt="Boston Bilingual School" class="logo__img" />

@@ -9,7 +9,7 @@ const address = lang === "es" ? "Calle San Andrés 307, Trujillo, La Libertad, P
 const privacyHref = lang === "es" ? "/es/privacidad" : "/en/privacidad";
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" transition:persist={/^\/(es|en)\/admisiones\/?/.test(Astro.url.pathname) ? 'admissions-footer' : undefined}>
   <div class="site-footer__ornament site-footer__ornament--left" aria-hidden="true"></div>
   <div class="site-footer__ornament site-footer__ornament--right" aria-hidden="true"></div>
   <div class="container site-footer__container">
