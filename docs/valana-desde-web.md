@@ -2,6 +2,8 @@
 
 `boston-api` conserva el envío original en D1. Desde la migración `0003_entregas_valana.sql`, cada formulario **nuevo** crea una entrega pendiente; los registros anteriores no se importan ni se borran. Tras guardar, el Worker intenta enviarlo a la API privada de Valana. Un Cron Trigger cada cinco minutos revisa hasta veinte entregas pendientes y solo llama a Valana cuando las hay. Los fallos se reintentan con espera creciente hasta una hora; el formulario original y su entrega pendiente permanecen en D1.
 
+Desde la migración D1 `0004_datos_admision.sql`, la postulación envía también `nombres_estudiante`, `apellido_paterno_estudiante`, `apellido_materno_estudiante`, `institucion_procedencia` y `parentesco_apoderado`. Los registros anteriores llevan `null` en esos campos. `nombre_estudiante` sigue siendo el nombre completo; `telefono_apoderado` conserva su nombre de contrato aunque la ficha lo muestre como «Celular». El formulario de Contacto no cambia.
+
 La llamada entre servidores usa `VALANA_INTEGRATION_TOKEN` (secret del Worker) y `BOSTON_WEB_TOKEN` (archivo privado de Valana), con el mismo valor. La URL pública del backend se configura como `VALANA_API_URL`. Nunca se envían el token de Turnstile ni el secreto al navegador. Valana deduplica mediante `(tipo, id de D1)`, guarda la solicitud web separada del chat de WhatsApp y utiliza el contador diario compartido para repartirla. No envía respuestas automáticas de WhatsApp por los formularios. D1 mantiene el envío original; el estado de atención y las notas se gestionan en Valana.
 
 ## Orden de activación

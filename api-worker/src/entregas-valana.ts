@@ -8,7 +8,9 @@ function configurado(env:Entorno):boolean {
 
 async function cargar(env:Entorno,tipo:Tipo,id:number):Promise<Record<string,unknown>|null> {
   if(tipo==='postulacion'){
-    const fila=await env.DB.prepare(`SELECT id,fecha_creacion,idioma,nombre_estudiante,edad_estudiante,grado,
+    const fila=await env.DB.prepare(`SELECT id,fecha_creacion,idioma,nombre_estudiante,
+      nombres_estudiante,apellido_paterno_estudiante,apellido_materno_estudiante,
+      institucion_procedencia,parentesco_apoderado,edad_estudiante,grado,
       nombre_apoderado,telefono_apoderado,correo_apoderado,medio_contacto FROM postulaciones WHERE id=?`)
       .bind(id).first<Record<string,unknown>>();
     return fila?{tipo,...fila}:null;

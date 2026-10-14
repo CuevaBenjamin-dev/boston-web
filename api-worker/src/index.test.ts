@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { test } from 'node:test';
+import { mock, test } from 'node:test';
 import { crearManejador, type Guardar, type Verificar } from './index.ts';
+import { entregarValana } from './entregas-valana.ts';
 
 const env = {
   DB: {} as D1Database,
@@ -85,10 +86,13 @@ test('la migración 0004 guarda la ficha nueva y crea una entrega pendiente', as
   const localDb = {
     prepare(sql: string) {
       return { bind(...valores: Array<string | number | null>) {
-        return { async run() {
-          const resultado = sqlite.prepare(sql).run(...valores);
-          return { meta: { last_row_id: Number(resultado.lastInsertRowid) } };
-        } };
+        return {
+          async first() { return sqlite.prepare(sql).get(...valores) ?? null; },
+          async run() {
+            const resultado = sqlite.prepare(sql).run(...valores);
+            return { meta: { last_row_id: Number(resultado.lastInsertRowid) } };
+          },
+        };
       } };
     },
   } as unknown as D1Database;
@@ -104,8 +108,50 @@ test('la migración 0004 guarda la ficha nueva y crea una entrega pendiente', as
   });
   const segundo = { ...datosFichaNueva, studentFirstNames: 'Sofía', studentAge: '8', grade: 'primaria_3' };
   assert.equal((await local(post('/api/postulaciones', segundo), { ...env, DB: localDb })).status, 201);
-  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM postulaciones').get()?.total, 2);
-  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM entregas_valana').get()?.total, 2);
+  assert.equal((await local(post('/api/postulaciones', datosPostulacion), { ...env, DB: localDb })).status, 201);
+  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM postulaciones').get()?.total, 3);
+  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM entregas_valana').get()?.total, 3);
+
+  const ids = sqlite.prepare('SELECT id FROM postulaciones ORDER BY id').all().map((fila) => Number(fila.id));
+  const cuerpos: Array<Record<string, unknown>> = [];
+  const tokenPrivado = 'x'.repeat(32);
+  const fetchSimulado = mock.method(globalThis, 'fetch', async (
+    url: Parameters<typeof fetch>[0], options?: Parameters<typeof fetch>[1],
+  ) => {
+    assert.equal(String(url), 'https://valana.example.test/integraciones/boston/formularios');
+    assert.equal(options?.method, 'POST');
+    assert.equal((options?.headers as Record<string, string>).Authorization, `Bearer ${tokenPrivado}`);
+    cuerpos.push(JSON.parse(String(options?.body)) as Record<string, unknown>);
+    return new Response(null, { status: 201 });
+  });
+  try {
+    const entornoValana = { DB: localDb, VALANA_API_URL: 'https://valana.example.test',
+      VALANA_INTEGRATION_TOKEN: tokenPrivado };
+    await entregarValana(entornoValana, 'postulacion', ids[0]);
+    await entregarValana(entornoValana, 'postulacion', ids[1]);
+    await entregarValana(entornoValana, 'postulacion', ids[2]);
+  } finally {
+    fetchSimulado.mock.restore();
+  }
+  assert.deepEqual(cuerpos.map(({ tipo, id, nombre_estudiante }) => ({ tipo, id, nombre_estudiante })), [
+    { tipo: 'postulacion', id: ids[0], nombre_estudiante: 'Ana María Pérez García' },
+    { tipo: 'postulacion', id: ids[1], nombre_estudiante: 'Sofía Pérez García' },
+    { tipo: 'postulacion', id: ids[2], nombre_estudiante: 'Ana Pérez' },
+  ]);
+  for (const cuerpo of cuerpos.slice(0, 2)) {
+    assert.equal(cuerpo.nombres_estudiante === 'Ana María' || cuerpo.nombres_estudiante === 'Sofía', true);
+    assert.equal(cuerpo.apellido_paterno_estudiante, 'Pérez');
+    assert.equal(cuerpo.apellido_materno_estudiante, 'García');
+    assert.equal(cuerpo.institucion_procedencia, 'Colegio de ejemplo');
+    assert.equal(cuerpo.parentesco_apoderado, 'Padre');
+    assert.equal(cuerpo.telefono_apoderado, '+51 976 586 016');
+    assert.equal('turnstileToken' in cuerpo, false);
+  }
+  for (const campo of ['nombres_estudiante', 'apellido_paterno_estudiante',
+    'apellido_materno_estudiante', 'institucion_procedencia', 'parentesco_apoderado']) {
+    assert.equal(cuerpos[2][campo], null);
+  }
+  assert.equal(sqlite.prepare('SELECT count(*) AS total FROM entregas_valana WHERE entregada_en IS NOT NULL').get()?.total, 3);
   sqlite.close();
 });
 for (const [nombre, cambios] of [
