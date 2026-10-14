@@ -77,7 +77,6 @@ const t = copy[lang];
 
 <svg class="contact-icons" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <symbol id="ct-phone" viewBox="0 0 32 32"><path d="M7 3 3 7c0 10 12 22 22 22l4-4-7-7-4 4c-4-2-6-4-8-8l4-4-7-7Z"/></symbol>
-  <symbol id="ct-whatsapp" viewBox="0 0 32 32"><path d="M16 3a13 13 0 0 0-11 20L3 29l6-2a13 13 0 1 0 7-24Z"/><path d="M10 10c0 6 6 12 12 12l2-3-4-3-2 2c-2-1-3-2-4-4l-3 2Z"/></symbol>
   <symbol id="ct-mail" viewBox="0 0 32 32"><rect x="3" y="7" width="26" height="18" rx="2"/><path d="m4 9 12 9L28 9"/></symbol>
   <symbol id="ct-calendar" viewBox="0 0 32 32"><rect x="4" y="7" width="24" height="22" rx="2"/><path d="M4 13h24M10 3v8M22 3v8M10 19h4M18 19h4M10 24h4"/></symbol>
   <symbol id="ct-people" viewBox="0 0 32 32"><circle cx="16" cy="9" r="4"/><path d="M8 26v-4a8 8 0 0 1 16 0v4H8ZM6 13a3 3 0 1 1-1-6M4 26H2v-4a6 6 0 0 1 5-6M26 13a3 3 0 1 0 1-6M28 26h2v-4a6 6 0 0 0-5-6"/></symbol>
@@ -89,7 +88,7 @@ const t = copy[lang];
 <section class="contact-benefits" aria-label={lang === "es" ? "Formas de atención" : "Ways we can help"}>
   <div class="container contact-benefits__grid">
     {t.benefits.map((item) => <article class="contact-benefit">
-      <span class="contact-round-icon" data-tone={item.tone}><svg aria-hidden="true"><use href={`#ct-${item.icon}`}></use></svg></span>
+      <span class="contact-round-icon" data-tone={item.tone}>{item.icon === "whatsapp" ? <img src="/icons/whatsapp-white.svg" alt="" width="34" height="34" aria-hidden="true" /> : <svg aria-hidden="true"><use href={`#ct-${item.icon}`}></use></svg>}</span>
       <h2>{item.title}</h2><p>{item.text}</p>
     </article>)}
   </div>
@@ -115,7 +114,7 @@ const t = copy[lang];
   <div class="container">
     <div class="contact-heading"><span class="contact-accent" aria-hidden="true"></span><h2>{t.channelsTitle}</h2><p>{t.channelsIntro}</p></div>
     <div class="contact-channels__grid">
-      {t.channels.map((item) => <a class="contact-channel" href={item.href} target={item.icon === "whatsapp" ? "_blank" : undefined} rel={item.icon === "whatsapp" ? "noopener noreferrer" : undefined}><span class="contact-round-icon" data-tone={item.tone}><svg aria-hidden="true"><use href={`#ct-${item.icon}`}></use></svg></span><h3>{item.title}</h3><strong>{item.value}</strong><p>{item.text}</p></a>)}
+      {t.channels.map((item) => <a class="contact-channel" href={item.href} target={item.icon === "whatsapp" ? "_blank" : undefined} rel={item.icon === "whatsapp" ? "noopener noreferrer" : undefined}><span class="contact-round-icon" data-tone={item.tone}>{item.icon === "whatsapp" ? <img src="/icons/whatsapp-white.svg" alt="" width="34" height="34" aria-hidden="true" /> : <svg aria-hidden="true"><use href={`#ct-${item.icon}`}></use></svg>}</span><h3>{item.title}</h3><strong>{item.value}</strong><p>{item.text}</p></a>)}
     </div>
   </div>
 </section>
@@ -148,6 +147,7 @@ const t = copy[lang];
   .contact-round-icon{display:grid;place-items:center;flex:none;width:68px;height:68px;margin:0 auto 15px;border-radius:50%;background:#1673d2;color:#fff}
   .contact-round-icon[data-tone="green"]{background:#24b961}.contact-round-icon[data-tone="orange"]{background:#ff9200}
   .contact-round-icon svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .contact-round-icon img{display:block;width:34px;height:auto;aspect-ratio:1}
   .contact-benefit h2{margin:0 0 9px;color:#133c70;font-size:1.04rem;font-weight:800;line-height:1.3}
   .contact-benefit p{margin:0;color:#505763;font-size:.9rem;line-height:1.47}
   .contact-main{padding:0 0 71px;background:#fff;scroll-margin-top:90px}
@@ -203,7 +203,7 @@ const t = copy[lang];
   .contact-visit__copy a:hover{background:#ec8500}
   .contact-channel:focus-visible,.contact-visit__copy a:focus-visible{outline:3px solid #ff9900;outline-offset:4px}
   @media(max-width:900px){.contact-benefits__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-main__grid{grid-template-columns:1fr}.contact-support{min-height:0}.contact-channels__grid,.contact-hours__grid{gap:14px}.contact-channel strong{font-size:1rem}.contact-visit__copy{padding:40px}}
-  @media(max-width:640px){.contact-benefits__grid{gap:12px}.contact-benefit{padding:18px 12px;min-height:205px}.contact-round-icon{width:54px;height:54px}.contact-round-icon svg{width:28px;height:28px}.contact-benefit h2{font-size:.85rem}.contact-benefit p{font-size:.75rem}.contact-main{padding-bottom:40px}.contact-support{padding:29px 22px}.contact-support__intro h2{font-size:2rem}.contact-support__intro p{font-size:.95rem}.contact-support__portrait{width:250px;height:240px}.contact-support__portrait :global(img){width:190px;height:190px}.contact-channels{padding:45px 0}.contact-channels__grid,.contact-hours__grid{grid-template-columns:1fr}.contact-channel{min-height:190px;padding:20px}.contact-hours{padding:45px 0}.contact-visit{padding:35px 0}.contact-visit__banner{min-height:430px;align-items:flex-end}.contact-visit__banner>img{object-position:74% center}.contact-visit__shade{inset:0;width:100%;border-radius:0;background:linear-gradient(0deg,#00346f 0%,rgba(0,61,130,.95) 44%,rgba(0,61,130,.05) 100%)}.contact-visit__orange{right:-80px;top:-180px}.contact-visit__copy{padding:190px 25px 33px}.contact-visit__copy h2{font-size:1.9rem}}
+  @media(max-width:640px){.contact-benefits__grid{gap:12px}.contact-benefit{padding:18px 12px;min-height:205px}.contact-round-icon{width:54px;height:54px}.contact-round-icon svg,.contact-round-icon img{width:28px;height:28px}.contact-benefit h2{font-size:.85rem}.contact-benefit p{font-size:.75rem}.contact-main{padding-bottom:40px}.contact-support{padding:29px 22px}.contact-support__intro h2{font-size:2rem}.contact-support__intro p{font-size:.95rem}.contact-support__portrait{width:250px;height:240px}.contact-support__portrait :global(img){width:190px;height:190px}.contact-channels{padding:45px 0}.contact-channels__grid,.contact-hours__grid{grid-template-columns:1fr}.contact-channel{min-height:190px;padding:20px}.contact-hours{padding:45px 0}.contact-visit{padding:35px 0}.contact-visit__banner{min-height:430px;align-items:flex-end}.contact-visit__banner>img{object-position:74% center}.contact-visit__shade{inset:0;width:100%;border-radius:0;background:linear-gradient(0deg,#00346f 0%,rgba(0,61,130,.95) 44%,rgba(0,61,130,.05) 100%)}.contact-visit__orange{right:-80px;top:-180px}.contact-visit__copy{padding:190px 25px 33px}.contact-visit__copy h2{font-size:1.9rem}}
   @media(max-width:420px){
     .contact-benefit{min-height:0}
     .contact-support__intro h2{font-size:clamp(1.8rem,8vw,2rem)}
