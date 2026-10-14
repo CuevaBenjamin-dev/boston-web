@@ -12,6 +12,14 @@ const routes: Record<Section, string> = {
   fees: `${base}pensiones/`,
   vacancies: `${base}vacantes/`,
 };
+const feePlans = {
+  historical2026: { entry: 500, enrollment: 400, monthly: 550 },
+  new2027: { entry: 500, enrollment: 400, monthly: 700 },
+  continuing2027: { entry: null, enrollment: 200, monthly: 550 },
+} as const;
+const feePlanOrder = ['historical2026', 'new2027', 'continuing2027'] as const;
+const pensionDueDates = ['31/03/2027', '30/04/2027', '31/05/2027', '30/06/2027', '31/07/2027', '31/08/2027', '30/09/2027', '31/10/2027', '30/11/2027', '13/12/2027'] as const;
+const soles = (amount: number) => `S/ ${amount}`;
 
 const copy = {
   es: {
@@ -21,47 +29,61 @@ const copy = {
     apply: 'Solicitar admisión', consult: 'Consultar con Admisiones', more: 'Conoce el proceso',
     overview: {
       eyebrow: 'TU CAMINO COMIENZA AQUÍ', title: 'Un lugar para crecer, aprender y descubrir.',
-      intro: 'En Boston Bilingual School acompañamos a cada familia con cercanía y claridad durante el proceso de admisión 2027. Conoce nuestra propuesta para Primaria y Secundaria y encuentra el siguiente paso para tu familia.',
+      intro: 'En Boston Bilingual School abrimos nuestras puertas a las familias de Trujillo que buscan una educación bilingüe de excelencia, formación integral y proyección preuniversitaria internacional para sus hijos en Primaria y Secundaria.',
+      detail: 'Nuestra propuesta promueve el pensamiento crítico, los valores y las competencias globales en un entorno inclusivo de sana convivencia escolar. Las vacantes son muy limitadas por sección para garantizar una atención personalizada y de calidad, conforme a la normativa del Ministerio de Educación y al Reglamento Interno de la institución.',
+      processText: 'Para iniciar la postulación, completa la solicitud de admisión y presenta la documentación requerida, incluido el historial académico previo y, en caso de traslado, el certificado de buena conducta. Acompañamos a cada postulante en la evaluación y su adaptación a nuestra propuesta curricular e inmersión lingüística. Tras revisar los requisitos, comunicamos el resultado y la familia formaliza la vacante con la firma del compromiso de admisión y la matrícula.',
       imageAlt: 'Asesora de admisiones conversando con una familia', imageLabel: 'Una comunidad que acompaña',
       levelsTitle: 'Una formación para cada etapa',
-      primary: 'Primaria', primaryText: 'Una base bilingüe y una formación integral que despiertan la curiosidad y el gusto por aprender.',
-      secondary: 'Secundaria', secondaryText: 'Acompañamiento académico y experiencias que preparan a los estudiantes para sus próximos desafíos.',
+      primary: 'Primaria', primaryText: 'Formación integral bilingüe con atención personalizada, pensamiento crítico, valores y convivencia escolar.',
+      secondary: 'Secundaria', secondaryText: 'Desarrollo de competencias globales y preparación preuniversitaria con proyección internacional.',
       pathwayTitle: 'Todo lo que necesitas saber', pathwayIntro: 'Explora cada apartado a tu ritmo. Cuando estés listo, completa la ficha de admisión al final de esta página.',
-      pathway: ['Conoce las etapas y los requisitos del proceso.', 'Consulta la información económica directamente con el colegio.', 'Pregunta por la disponibilidad para el grado de interés.'],
+      pathway: ['Conoce las etapas, evaluaciones y documentos requeridos.', 'Revisa las tarifas, beneficios y vencimientos de 2027.', 'Consulta las vacantes limitadas para el grado de interés.'],
       formEyebrow: 'SIGUIENTE PASO', formTitle: 'Comienza tu solicitud', formText: 'Completa la ficha de admisión y nuestro equipo se pondrá en contacto contigo.',
     },
     process: {
       eyebrow: 'UN PROCESO CLARO', title: 'Cómo postular',
-      intro: 'Te acompañamos en cada etapa del proceso. La entrevista o evaluación se realiza según corresponda al grado solicitado.',
+      intro: 'El proceso de admisión comprende cuatro etapas, desde la solicitud de información hasta la formalización de la vacante. Nuestro equipo orienta a las familias de Primaria y Secundaria durante cada paso.',
       steps: [
-        { title: 'Solicitud de información', text: 'Completa la ficha de admisión para que nuestro equipo conozca tu interés y pueda orientarte.' },
-        { title: 'Entrevista o evaluación', text: 'Conversamos con la familia y, si corresponde, realizamos una evaluación de admisión.' },
-        { title: 'Documentación', text: 'Presenta los requisitos necesarios para continuar el proceso de ingreso.' },
-        { title: 'Matrícula', text: 'Completa la matrícula y la firma del contrato de servicio educativo.' },
+        { title: 'Solicitud de información e inscripción', text: 'Solicita la Constancia de Vacante y completa la ficha de postulación mediante Secretaría o los canales virtuales autorizados, incluido el WhatsApp institucional. Recibirás de manera física o virtual la información económica, las condiciones del servicio y una copia del Reglamento Interno.' },
+        { title: 'Presentación de requisitos y documentación', text: 'Entrega los documentos requeridos para la postulación. En los traslados, el certificado de buena conducta es obligatorio. La lista completa figura a continuación.' },
+        { title: 'Evaluación de ingreso y orientación', text: 'Al inicio del proceso, el diagnóstico de ingreso identifica las competencias académicas y lingüísticas del estudiante en inglés y francés. Psicología y el Comité de Tutoría brindan orientación socioemocional y evalúan su adaptación escolar.' },
+        { title: 'Resultados y formalización', text: 'La Dirección verifica los requisitos y aprueba la admisión conforme a la R.M. N.º 447-2020-MINEDU. La familia recibe la comunicación de la asignación formal de vacante y firma el compromiso de admisión y la matrícula correspondiente.' },
       ],
       tabsTitle: 'Orientación por nivel', primary: 'Primaria', secondary: 'Secundaria',
-      primaryText: 'Nuestro equipo orienta a las familias de Primaria sobre la solicitud, la entrevista o evaluación que corresponda y los documentos necesarios.',
-      secondaryText: 'Para Secundaria, el equipo de admisiones explica las etapas aplicables al grado solicitado y acompaña a la familia hasta la matrícula.',
-      transfersTitle: 'Documentación para traslados', transfersIntro: 'Entre los requisitos existentes para traslados se encuentran:',
-      requirements: ['Libreta de notas', 'Foto del DNI del estudiante', 'Foto del DNI de ambos padres', 'Constancia de no adeudo del colegio de procedencia'],
-      requirementsNote: 'Confirma con Admisiones la documentación aplicable a tu caso antes de presentarla.',
+      primaryText: 'Las familias de Primaria reciben orientación sobre la ficha de postulación, los documentos, la evaluación de competencias y la formalización de la vacante.',
+      secondaryText: 'Las familias de Secundaria reciben orientación sobre los mismos pasos, incluida la evaluación académica y lingüística y la documentación de traslado cuando corresponda.',
+      transfersTitle: 'Documentación requerida', transfersIntro: 'Los postulantes, especialmente quienes se trasladan desde otra institución, deben presentar:',
+      requirements: ['Ficha de Matrícula actualizada.', 'Copia de la Partida o Acta de Nacimiento.', 'Certificados Oficiales de Estudios de los grados concluidos.', 'Libreta de Notas o Informe de Progreso con los resultados alcanzados hasta el traslado.', 'Certificado de Buena Conducta, obligatorio para traslados.', 'Constancia de No Adeudo o verificación de no registrar deudas en la institución de origen.'],
+      requirementsNote: 'La documentación se revisa antes de la aprobación de la Dirección y la asignación formal de la vacante.',
     },
     fees: {
       eyebrow: 'INFORMACIÓN ECONÓMICA', title: 'Pensiones escolares',
-      intro: 'La información sobre matrícula, pensiones, cronogramas y condiciones de pago se confirma directamente con Admisiones. Te orientaremos según el nivel y el grado de interés.',
+      intro: 'El servicio educativo se abona en diez pensiones mensuales, de marzo a diciembre. Revisa el tarifario 2026 como referencia histórica y las condiciones para estudiantes nuevos y continuadores en 2027.',
       cards: [
-        { title: 'Matrícula', text: 'Consulta el importe y las condiciones vigentes para formalizar el ingreso.' },
-        { title: 'Pensiones', text: 'Solicita la información de pensiones correspondiente al nivel de interés.' },
-        { title: 'Cronograma', text: 'Pide el calendario vigente de pagos y sus fechas aplicables.' },
+        { title: 'Cuota de ingreso', text: 'Pago único por estudiante al momento de ingresar a la institución.' },
+        { title: 'Derecho de matrícula', text: 'Asegura la reserva de la vacante y la inscripción formal para el año lectivo.' },
+        { title: 'Pensión mensual', text: 'El costo anual de enseñanza se abona en diez cuotas, de marzo a diciembre.' },
       ],
-      tableTitle: 'Consulta por nivel', level: 'Nivel', tuition: 'Matrícula', pension: 'Pensión',
-      primary: 'Primaria', secondary: 'Secundaria', onRequest: 'Información previa consulta',
-      conditionsTitle: 'Condiciones de pago', conditionsText: 'El equipo de Admisiones te proporcionará las condiciones y el cronograma vigentes antes de completar la matrícula.',
-      note: 'No se muestran importes sin confirmación oficial del colegio.',
+      plans: {
+        historical2026: { title: 'Tarifario 2026', note: 'Referencia histórica de los importes del año escolar 2026.' },
+        new2027: { title: 'Estudiantes nuevos 2027', note: 'Primera admisión al colegio en el año escolar 2027.' },
+        continuing2027: { title: 'Estudiantes 2026 que continúan en 2027', note: 'Para familias que ratifican su vacante: matrícula con 50 % de descuento y pensión mensual preferencial.' },
+      },
+      plansTitle: 'Tarifas por año y condición',
+      concept: 'Concepto', amount: 'Importe', entry: 'Cuota de ingreso · pago único', enrollment: 'Matrícula', monthly: 'Pensión mensual · 10 cuotas',
+      alreadyPaid: 'No se cobra de nuevo si ya fue abonada',
+      conditionsTitle: 'Beneficios y condiciones',
+      conditions: [
+        'El segundo hermano recibe un descuento del 30 % en la pensión, aplicado sobre el hermano mayor o de mayor grado y condicionado al pago puntual del recibo.',
+        'Los padres o apoderados con deudas pendientes con la institución no podrán matricular al estudiante para el siguiente año lectivo.',
+        'Desde 2027 no se aplica el beneficio adicional por pago puntual para los alumnos que continúan.',
+      ],
+      scheduleTitle: 'Cronograma de pensiones 2027', scheduleIntro: 'Las diez pensiones vencen en las siguientes fechas:', month: 'Mes', dueDate: 'Vencimiento',
+      months: ['Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
     },
     vacancies: {
       eyebrow: 'INGRESO 2027', title: 'Vacantes disponibles',
-      intro: 'La disponibilidad puede variar por nivel y grado. Consulta con Admisiones para recibir información actualizada antes de iniciar tu solicitud.',
+      intro: 'Las vacantes para Primaria y Secundaria son muy limitadas por sección para garantizar una atención personalizada y de calidad. Consulta con Admisiones la disponibilidad del grado de interés antes de iniciar tu solicitud.',
       tabsTitle: 'Consulta por nivel', primary: 'Primaria', secondary: 'Secundaria', grade: 'Grado', availability: 'Disponibilidad', onRequest: 'Consultar disponibilidad',
       primaryGrades: ['1.º Primaria', '2.º Primaria', '3.º Primaria', '4.º Primaria', '5.º Primaria', '6.º Primaria'],
       secondaryGrades: ['1.º Secundaria', '2.º Secundaria', '3.º Secundaria', '4.º Secundaria', '5.º Secundaria'],
@@ -76,47 +98,61 @@ const copy = {
     apply: 'Start an application', consult: 'Ask Admissions', more: 'Explore the process',
     overview: {
       eyebrow: 'YOUR JOURNEY STARTS HERE', title: 'A place to grow, learn and discover.',
-      intro: 'At Boston Bilingual School, we guide each family through the 2027 admissions process with care and clarity. Explore our Primary and Secondary programs and find the next step for your family.',
+      intro: 'Boston Bilingual School welcomes families in Trujillo seeking excellent bilingual education, well-rounded development and international pre-university preparation for their children in Primary and Secondary School.',
+      detail: 'Our inclusive learning environment fosters critical thinking, values and global competencies alongside positive school relationships. Places are very limited in each class so that every student receives personalized, high-quality attention, in accordance with Ministry of Education regulations and the school’s Internal Regulations.',
+      processText: 'To begin, complete the admissions application and submit the required documents, including previous academic records and, for transfers, a Certificate of Good Conduct. We assess and guide each applicant as they join our curriculum and language immersion program. Once requirements are reviewed, we communicate the result and the family formalizes the place by signing the admissions commitment and completing enrollment.',
       imageAlt: 'Admissions advisor speaking with a family', imageLabel: 'A community by your side',
       levelsTitle: 'Learning for every stage',
-      primary: 'Primary', primaryText: 'A bilingual foundation and well-rounded education that spark curiosity and a love of learning.',
-      secondary: 'Secondary', secondaryText: 'Academic guidance and experiences that prepare students for the challenges ahead.',
+      primary: 'Primary', primaryText: 'Well-rounded bilingual education with personalized attention, critical thinking, values and positive school relationships.',
+      secondary: 'Secondary', secondaryText: 'Development of global competencies and pre-university preparation with an international outlook.',
       pathwayTitle: 'Everything you need to know', pathwayIntro: 'Explore each section at your own pace. When you are ready, complete the admissions form at the end of this page.',
-      pathway: ['Review the steps and requirements.', 'Ask the school directly for financial information.', 'Check availability for the grade you need.'],
+      pathway: ['Review the stages, assessments and required documents.', 'See 2027 fees, benefits and payment due dates.', 'Ask about the limited places in the grade you need.'],
       formEyebrow: 'NEXT STEP', formTitle: 'Begin your application', formText: 'Complete the admissions form and our team will get in touch.',
     },
     process: {
       eyebrow: 'A CLEAR PATH', title: 'How to apply',
-      intro: 'We guide you through every stage. An interview or assessment takes place when applicable to the requested grade.',
+      intro: 'The admissions process has four stages, from requesting information to formalizing a place. Our team guides Primary and Secondary families through every step.',
       steps: [
-        { title: 'Request information', text: 'Complete the admissions form so our team can learn about your interest and guide you.' },
-        { title: 'Interview or assessment', text: 'We speak with the family and, when applicable, conduct an admissions assessment.' },
-        { title: 'Documentation', text: 'Submit the requirements needed to continue the admissions process.' },
-        { title: 'Enrollment', text: 'Complete enrollment and sign the educational services agreement.' },
+        { title: 'Information request and registration', text: 'Request the Constancia de Vacante (vacancy certificate) and complete the application form through the school office or authorized virtual channels, including the school’s WhatsApp. You will receive the financial information, service terms and a copy of the Internal Regulations, in print or digitally.' },
+        { title: 'Requirements and documents', text: 'Submit the documents required for admission. For transfers, a Certificate of Good Conduct is mandatory. The full list appears below.' },
+        { title: 'Entrance assessment and guidance', text: 'At the start of the process, the entrance assessment identifies the student’s academic and language competencies in English and French. Psychology staff and the Tutoring Committee provide social and emotional guidance and assess school adjustment.' },
+        { title: 'Results and formalization', text: 'School leadership verifies the requirements and approves admission under R.M. No. 447-2020-MINEDU. The family is notified of the formal allocation of a place, then signs the admissions commitment and completes enrollment.' },
       ],
       tabsTitle: 'Guidance by level', primary: 'Primary', secondary: 'Secondary',
-      primaryText: 'Our team guides Primary families through the application, the interview or assessment where applicable, and the required documents.',
-      secondaryText: 'For Secondary, the admissions team explains the stages for the requested grade and supports the family through enrollment.',
-      transfersTitle: 'Transfer documentation', transfersIntro: 'Existing transfer requirements include:',
-      requirements: ['Report card', "Photo of the student's DNI", "Photos of both parents' DNI documents", 'Certificate of no outstanding debt from the previous school'],
-      requirementsNote: 'Confirm which documents apply to your case with Admissions before submitting them.',
+      primaryText: 'Primary families receive guidance on the application form, required documents, competency assessment and formal allocation of a place.',
+      secondaryText: 'Secondary families receive guidance on the same stages, including the academic and language assessment and transfer documents where applicable.',
+      transfersTitle: 'Required documents', transfersIntro: 'Applicants, especially those transferring from another school, must submit:',
+      requirements: ['Updated Enrollment Form.', 'Copy of the applicant’s Birth Certificate or Birth Record.', 'Official Study Certificates for completed grades.', 'Report Card or Progress Report showing results up to the date of transfer.', 'Certificate of Good Conduct, mandatory for transfers.', 'No Outstanding Debt Certificate or verification that no debt is owed to the previous school.'],
+      requirementsNote: 'The documents are reviewed before school leadership approves admission and formally allocates a place.',
     },
     fees: {
       eyebrow: 'FINANCIAL INFORMATION', title: 'School fees',
-      intro: 'Enrollment costs, school fees, payment schedules and terms are confirmed directly with Admissions. We will guide you according to the level and grade you are interested in.',
+      intro: 'The educational service is paid in ten monthly installments from March to December. Review the 2026 fees as a historical reference and the 2027 terms for new and continuing students.',
       cards: [
-        { title: 'Enrollment', text: 'Ask about the current amount and terms for formalizing enrollment.' },
-        { title: 'School fees', text: 'Request fee information for the level you are interested in.' },
-        { title: 'Schedule', text: 'Ask for the current payment calendar and applicable dates.' },
+        { title: 'Entrance fee', text: 'A one-time payment per student when they first join the school.' },
+        { title: 'Enrollment fee', text: 'Reserves the place and formalizes registration for the school year.' },
+        { title: 'Monthly tuition', text: 'The annual cost of education is paid in ten installments, from March to December.' },
       ],
-      tableTitle: 'Information by level', level: 'Level', tuition: 'Enrollment', pension: 'School fees',
-      primary: 'Primary', secondary: 'Secondary', onRequest: 'Information upon request',
-      conditionsTitle: 'Payment terms', conditionsText: 'The Admissions team will provide the current terms and payment schedule before enrollment is completed.',
-      note: 'Amounts are not shown without official confirmation from the school.',
+      plans: {
+        historical2026: { title: '2026 fee schedule', note: 'Historical reference for the 2026 school year.' },
+        new2027: { title: 'New students in 2027', note: 'Students joining the school for the first time in 2027.' },
+        continuing2027: { title: '2026 students continuing in 2027', note: 'For families confirming their place: a 50% enrollment discount and a preferential monthly tuition rate.' },
+      },
+      plansTitle: 'Fees by year and student status',
+      concept: 'Item', amount: 'Amount', entry: 'Entrance fee · one-time payment', enrollment: 'Enrollment', monthly: 'Monthly tuition · 10 installments',
+      alreadyPaid: 'Not charged again if already paid',
+      conditionsTitle: 'Benefits and conditions',
+      conditions: [
+        'The second sibling receives a 30% discount on tuition, applied to the older sibling or the one in a higher grade, provided the bill is paid on time.',
+        'Parents or guardians with outstanding debt to the school cannot enroll the student for the following school year.',
+        'From 2027, the additional early-payment benefit no longer applies to continuing students.',
+      ],
+      scheduleTitle: '2027 tuition payment schedule', scheduleIntro: 'The ten installments fall due on these dates:', month: 'Month', dueDate: 'Due date',
+      months: ['March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     },
     vacancies: {
       eyebrow: '2027 ENTRY', title: 'Available places',
-      intro: 'Availability may vary by level and grade. Contact Admissions for up-to-date information before starting your application.',
+      intro: 'Places in Primary and Secondary are very limited in each class to ensure personalized, high-quality attention. Contact Admissions to check availability for your chosen grade before applying.',
       tabsTitle: 'Check by level', primary: 'Primary', secondary: 'Secondary', grade: 'Grade', availability: 'Availability', onRequest: 'Check availability',
       primaryGrades: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'],
       secondaryGrades: ['Secondary 1', 'Secondary 2', 'Secondary 3', 'Secondary 4', 'Secondary 5'],
@@ -137,7 +173,7 @@ const current = t[section];
   <symbol id="admission-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
 </svg>
 
-<section class:list={['admission-shell', { 'admission-shell--interior': section !== 'overview' }]}>
+<section class:list={['admission-shell', { 'admission-shell--interior': section !== 'overview', 'admission-shell--fees': section === 'fees' }]}>
   <div class="container admission-shell__grid">
     <aside class="admission-side" aria-label={t.sideTitle}>
       <div class="admission-side__heading"><span class="admission-side__mark"></span><span>{t.admission}</span></div>
@@ -168,6 +204,8 @@ const current = t[section];
           <span class="admission-eyebrow">{t.overview.eyebrow}</span>
           <h2>{t.overview.title}</h2>
           <p>{t.overview.intro}</p>
+          <p>{t.overview.detail}</p>
+          <p>{t.overview.processText}</p>
           <a class="admission-button" href={applyHref}>{t.apply}<svg aria-hidden="true"><use href="#admission-arrow" /></svg></a>
         </div>
         <figure class="admission-feature-photo">
@@ -236,12 +274,31 @@ const current = t[section];
               {t.fees.cards.map((card, index) => <article class="admission-info-card"><span>0{index + 1}</span><h2>{card.title}</h2><p>{card.text}</p></article>)}
             </div>
           </section>
-          <section class="admission-block" aria-labelledby="fees-table-title">
-            <div class="admission-section-label"><span>01</span><h2 id="fees-table-title">{t.fees.tableTitle}</h2></div>
-            <div class="admission-table-wrap"><table><thead><tr><th scope="col">{t.fees.level}</th><th scope="col">{t.fees.tuition}</th><th scope="col">{t.fees.pension}</th></tr></thead><tbody><tr><th scope="row">{t.fees.primary}</th><td>{t.fees.onRequest}</td><td>{t.fees.onRequest}</td></tr><tr><th scope="row">{t.fees.secondary}</th><td>{t.fees.onRequest}</td><td>{t.fees.onRequest}</td></tr></tbody></table></div>
-            <p class="admission-note">{t.fees.note}</p>
+          <section class="admission-block" aria-labelledby="fees-plans-title">
+            <div class="admission-section-label"><span>01</span><h2 id="fees-plans-title">{t.fees.plansTitle}</h2></div>
+            <div class="admission-fee-plans">
+              {feePlanOrder.map((planKey) => <article class="admission-fee-plan">
+                <div class="admission-fee-plan__heading"><h3>{t.fees.plans[planKey].title}</h3><p>{t.fees.plans[planKey].note}</p></div>
+                <div class="admission-table-wrap"><table>
+                  <thead><tr><th scope="col">{t.fees.concept}</th><th scope="col">{t.fees.amount}</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">{t.fees.entry}</th><td>{feePlans[planKey].entry === null ? t.fees.alreadyPaid : soles(feePlans[planKey].entry)}</td></tr>
+                    <tr><th scope="row">{t.fees.enrollment}</th><td>{soles(feePlans[planKey].enrollment)}</td></tr>
+                    <tr><th scope="row">{t.fees.monthly}</th><td>{soles(feePlans[planKey].monthly)}</td></tr>
+                  </tbody>
+                </table></div>
+              </article>)}
+            </div>
           </section>
-          <section class="admission-block admission-highlight" aria-labelledby="conditions-title"><div class="admission-highlight__icon"><svg aria-hidden="true"><use href="#admission-check" /></svg></div><div><h2 id="conditions-title">{t.fees.conditionsTitle}</h2><p>{t.fees.conditionsText}</p></div></section>
+          <section class="admission-block admission-highlight" aria-labelledby="conditions-title"><div class="admission-highlight__icon"><svg aria-hidden="true"><use href="#admission-check" /></svg></div><div><h2 id="conditions-title">{t.fees.conditionsTitle}</h2><ul>{t.fees.conditions.map((condition) => <li>{condition}</li>)}</ul></div></section>
+          <section class="admission-block" aria-labelledby="fee-schedule-title">
+            <div class="admission-section-label"><span>02</span><h2 id="fee-schedule-title">{t.fees.scheduleTitle}</h2></div>
+            <p class="admission-block__intro">{t.fees.scheduleIntro}</p>
+            <div class="admission-table-wrap admission-schedule-table"><table>
+              <thead><tr><th scope="col">{t.fees.month}</th><th scope="col">{t.fees.dueDate}</th></tr></thead>
+              <tbody>{pensionDueDates.map((date, index) => <tr><th scope="row">{t.fees.months[index]}</th><td>{date}</td></tr>)}</tbody>
+            </table></div>
+          </section>
         </>}
 
         {section === 'vacancies' && <>
@@ -356,6 +413,7 @@ const current = t[section];
   .admission-eyebrow{display:block;color:#e88200;font:800 .76rem var(--font-heading);letter-spacing:.16em;text-transform:uppercase}
   .admission-heading h1,.admission-heading h2{max-width:780px;margin:13px 0 18px;color:#053b78;font-size:clamp(2.2rem,3.4vw,3.5rem);font-weight:800;letter-spacing:-.045em;line-height:1.08}
   .admission-heading p{max-width:760px;margin:0;color:#52677b;font-size:1.02rem;line-height:1.75}
+  .admission-heading p+p{margin-top:12px}
   .admission-heading--overview{padding-bottom:29px}.admission-heading--interior{padding-bottom:39px;border-bottom:1px solid #dae5f0;margin-bottom:35px}
   .admission-button{display:inline-flex;align-items:center;justify-content:center;gap:17px;min-height:48px;margin-top:25px;padding:12px 22px;border-radius:9px;background:#ff9900;color:#fff;text-decoration:none;font-size:.88rem;font-weight:800;box-shadow:0 9px 18px rgba(242,142,0,.2);transition:transform .2s,background .2s,box-shadow .2s}
   .admission-button:hover{background:#e88700;transform:translateY(-2px);box-shadow:0 12px 22px rgba(242,142,0,.25)}.admission-button:focus-visible,.admission-nav__link:focus-visible,.admission-tabs button:focus-visible,.admission-pathway__card:focus-visible{outline:3px solid #ff9900;outline-offset:3px}
@@ -367,14 +425,20 @@ const current = t[section];
   .admission-level h4{margin:0 0 7px;color:#063e7d;font-size:1.04rem}.admission-level p{margin:0;color:#617387;font-size:.85rem;line-height:1.55}
   .admission-block__intro{margin:-4px 0 20px;color:#607386;font-size:.94rem;line-height:1.65}.admission-pathway{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.admission-pathway__card{position:relative;min-height:179px;padding:22px 17px 35px;border:1px solid #e1eaf4;border-radius:14px;background:#fff;color:#203c56;text-decoration:none;transition:transform .2s,box-shadow .2s}.admission-pathway__card:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(8,61,116,.1)}.admission-pathway__card>span{color:#e78700;font:800 .75rem var(--font-heading)}.admission-pathway__card h4{margin:13px 0 7px;color:#073e7c;font-size:.97rem;line-height:1.25}.admission-pathway__card p{margin:0;color:#607387;font-size:.78rem;line-height:1.5}.admission-pathway__card svg{position:absolute;right:17px;bottom:15px;color:#e78700}
   .admission-form-section{scroll-margin-top:90px;margin-top:72px;padding-top:42px;border-top:1px solid #dce6f0}.admission-form-section__heading{text-align:center}.admission-form-section__heading h3{margin:8px 0;color:#063e7d;font-size:clamp(1.65rem,2.4vw,2.25rem);font-weight:800}.admission-form-section__heading p{margin:0 0 23px;color:#607387;font-size:.91rem}
-  .admission-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.admission-step{position:relative;min-height:235px;padding:24px 18px;border:1px solid #e0e9f2;border-radius:15px;background:#fff;box-shadow:0 9px 24px rgba(9,62,118,.045)}.admission-step__number{display:block;margin-bottom:18px;color:#e88b00;font:800 2.15rem var(--font-heading);line-height:1}.admission-step__line{width:30px;height:3px;margin-bottom:16px;background:#ff9900;border-radius:2px}.admission-step h2{margin:0 0 8px;color:#073d79;font-size:.95rem;line-height:1.3}.admission-step p{margin:0;color:#617387;font-size:.78rem;line-height:1.55}
+  .admission-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.admission-step{position:relative;padding:25px 23px;border:1px solid #e0e9f2;border-radius:15px;background:#fff;box-shadow:0 9px 24px rgba(9,62,118,.045)}.admission-step__number{display:block;margin-bottom:14px;color:#e88b00;font:800 2.15rem var(--font-heading);line-height:1}.admission-step__line{width:30px;height:3px;margin-bottom:14px;background:#ff9900;border-radius:2px}.admission-step h2{margin:0 0 9px;color:#073d79;font-size:1.05rem;line-height:1.3}.admission-step p{margin:0;color:#536b82;font-size:.87rem;line-height:1.6}
   .admission-tabs{overflow:hidden;border:1px solid #dee8f2;border-radius:16px;background:#fff;box-shadow:0 10px 26px rgba(9,62,118,.04)}.admission-tabs__list{display:flex;gap:4px;padding:6px;border-bottom:1px solid #e1eaf4;background:#f5f9fd}.admission-tabs__list button{flex:1;min-height:45px;padding:10px 16px;border:0;border-radius:10px;background:transparent;color:#476781;font:800 .9rem var(--font-heading);cursor:pointer}.admission-tabs__list button[aria-selected="true"]{background:#063f7f;color:#fff;box-shadow:0 4px 12px rgba(3,61,127,.15)}.admission-tabs__panel{display:flex;align-items:center;gap:23px;min-height:125px;padding:27px 30px}.admission-tabs__panel[hidden]{display:none}.admission-tabs__panel p{max-width:650px;margin:0;color:#4f6478;font-size:.94rem;line-height:1.65}.admission-tabs__panel--table{display:block;padding:0}.admission-tabs__panel--table .admission-table-wrap{border:0;border-radius:0;box-shadow:none}
   .admission-transfer{padding:26px 30px 18px;border:1px solid #e1eaf4;border-radius:17px;background:#fff}.admission-transfer>.admission-section-label{margin-bottom:14px}.admission-transfer>p{margin:0 0 17px;color:#52687b;font-size:.9rem}.admission-transfer ul{display:grid;grid-template-columns:1fr 1fr;gap:12px 21px;margin:0 0 17px;padding:0;list-style:none}.admission-transfer li{display:flex;align-items:start;gap:10px;color:#304d68;font-size:.87rem;line-height:1.5}.admission-transfer li svg{flex:none;width:17px;height:17px;margin-top:2px;fill:none;stroke:#ee9300;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.admission-transfer .admission-note{margin:0;padding-top:14px;border-top:1px solid #e6edf4;color:#687d91;font-size:.8rem}
   .admission-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.admission-info-card{min-height:185px;padding:24px 20px;border:1px solid #e0e9f2;border-radius:15px;background:#fff}.admission-info-card>span{color:#e88b00;font:800 .78rem var(--font-heading)}.admission-info-card h2{margin:25px 0 8px;color:#073e7c;font-size:1.1rem}.admission-info-card p{margin:0;color:#607387;font-size:.82rem;line-height:1.55}
+  .admission-fee-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.admission-fee-plan{min-width:0;overflow:hidden;border:1px solid #dce7f1;border-radius:15px;background:#fff;box-shadow:0 9px 24px rgba(9,62,118,.045)}.admission-fee-plan__heading{min-height:121px;padding:20px 18px;background:#eef6ff}.admission-fee-plan:nth-child(2) .admission-fee-plan__heading{background:#fff3e2}.admission-fee-plan:nth-child(3) .admission-fee-plan__heading{background:#eaf8f2}.admission-fee-plan h3{margin:0 0 7px;color:#073e7c;font-size:1rem;line-height:1.3}.admission-fee-plan__heading p{margin:0;color:#536b82;font-size:.79rem;line-height:1.5}.admission-fee-plan .admission-table-wrap{border:0;border-radius:0;box-shadow:none}.admission-fee-plan table{table-layout:fixed}.admission-fee-plan th,.admission-fee-plan td{padding:13px 10px;font-size:.78rem;overflow-wrap:anywhere}.admission-fee-plan th:first-child{width:58%}.admission-fee-plan thead th{font-size:.68rem;letter-spacing:.03em}.admission-schedule-table{max-width:620px}
+  .admission-fee-plan__heading{height:164px}.admission-fee-plan tbody tr:first-child{height:108px}
   .admission-table-wrap{overflow-x:auto;border:1px solid #dce7f1;border-radius:14px;background:#fff;box-shadow:0 8px 22px rgba(8,61,116,.04)}.admission-table-wrap table{width:100%;border-collapse:collapse;text-align:left}.admission-table-wrap th,.admission-table-wrap td{padding:15px 19px;border-bottom:1px solid #e5edf5;font-size:.9rem}.admission-table-wrap thead th{background:#073f7d;color:#fff;font-size:.79rem;text-transform:uppercase;letter-spacing:.05em}.admission-table-wrap tbody th{color:#073d78;font-weight:800}.admission-table-wrap tbody td{color:#5b6d7e}.admission-table-wrap tbody tr:last-child th,.admission-table-wrap tbody tr:last-child td{border-bottom:0}.admission-table-wrap tbody tr:nth-child(even){background:#f8fbfe}.admission-note{margin:11px 0 0;color:#6c7f90;font-size:.81rem;line-height:1.5}
   .admission-highlight{display:flex;align-items:start;gap:17px;padding:23px 25px;border-radius:15px;background:#eaf4ff}.admission-highlight__icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:#ff9900;color:#fff}.admission-highlight__icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}.admission-highlight h2{margin:0 0 6px;color:#063d79;font-size:1.09rem}.admission-highlight p{margin:0;color:#4d647a;font-size:.87rem;line-height:1.6}
+  .admission-highlight ul{display:grid;gap:9px;margin:9px 0 0;padding-left:19px;color:#4d647a;font-size:.88rem;line-height:1.6}.admission-highlight li::marker{color:#e78700}
   .admission-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-top:71px;padding:31px 33px;border-radius:17px;background:linear-gradient(115deg,#073f7f,#0757a2);color:#fff}.admission-cta .admission-eyebrow{color:#ffb545}.admission-cta h2{margin:6px 0;color:#fff;font-size:1.52rem}.admission-cta p{margin:0;color:#dbeaff;font-size:.88rem}.admission-button--light{flex:none;margin:0;background:#ff9900;color:#fff}
-  @media(max-width:1080px){.admission-shell__grid{grid-template-columns:222px minmax(0,1fr);gap:35px}.admission-pathway{grid-template-columns:1fr 1fr}.admission-steps{grid-template-columns:1fr 1fr}.admission-step{min-height:180px}}
-  @media(max-width:760px){.admission-shell,.admission-shell--interior{padding:27px 0 70px}.admission-shell__grid{display:block}.admission-side{position:static;padding:0;margin-bottom:32px}.admission-side__heading{padding:0 0 10px}.admission-nav{display:flex;overflow-x:auto;gap:7px;padding:10px 0 5px;scrollbar-width:thin}.admission-nav__link{flex:0 0 180px;min-height:56px;grid-template-columns:22px 1fr;padding:9px 11px;font-size:.8rem}.admission-nav__link svg,.admission-side__help{display:none}.admission-breadcrumb{margin-bottom:19px}.admission-heading h1,.admission-heading h2{font-size:clamp(2rem,6vw,2.7rem)}.admission-feature-photo{height:260px;margin-bottom:42px}.admission-cta{align-items:start;flex-direction:column}.admission-button--light{margin:0}}
+  @media(min-width:1400px){.admission-shell--fees .admission-shell__grid{max-width:1400px;margin-left:max(24px,calc((100vw - 1200px)/2));margin-right:24px}}
+  @media(max-width:1399px){.admission-fee-plans{grid-template-columns:repeat(2,minmax(0,1fr))}.admission-fee-plan:last-child{grid-column:1/-1}.admission-fee-plan__heading{height:140px}}
+  @media(max-width:1080px){.admission-shell__grid{grid-template-columns:222px minmax(0,1fr);gap:35px}.admission-pathway{grid-template-columns:1fr 1fr}}
+  @media(max-width:980px){.admission-fee-plans{grid-template-columns:1fr}.admission-fee-plan:last-child{grid-column:auto}.admission-fee-plan__heading{height:auto}.admission-fee-plan tbody tr:first-child{height:auto}}
+  @media(max-width:760px){.admission-shell,.admission-shell--interior{padding:27px 0 70px}.admission-shell__grid{display:block}.admission-side{position:static;padding:0;margin-bottom:32px}.admission-side__heading{padding:0 0 10px}.admission-nav{display:flex;overflow-x:auto;gap:7px;padding:10px 0 5px;scrollbar-width:thin}.admission-nav__link{flex:0 0 180px;min-height:56px;grid-template-columns:22px 1fr;padding:9px 11px;font-size:.8rem}.admission-nav__link svg,.admission-side__help{display:none}.admission-breadcrumb{margin-bottom:19px}.admission-heading h1,.admission-heading h2{font-size:clamp(2rem,6vw,2.7rem)}.admission-feature-photo{height:260px;margin-bottom:42px}.admission-fee-plans{grid-template-columns:1fr}.admission-fee-plan__heading{min-height:0}.admission-cta{align-items:start;flex-direction:column}.admission-button--light{margin:0}}
   @media(max-width:520px){.admission-heading p{font-size:.91rem;line-height:1.65}.admission-levels,.admission-pathway,.admission-info-grid,.admission-steps,.admission-transfer ul{grid-template-columns:1fr}.admission-level{min-height:0}.admission-pathway__card{min-height:140px}.admission-step{min-height:0}.admission-transfer{padding:22px 20px}.admission-tabs__panel{align-items:start;flex-direction:column;gap:12px;padding:21px}.admission-tabs__panel--table{padding:0}.admission-table-wrap th,.admission-table-wrap td{padding:12px 11px;font-size:.76rem}.admission-table-wrap thead th{font-size:.7rem}.admission-feature-photo{height:215px}.admission-feature-photo figcaption{right:10px;bottom:10px;max-width:80%;font-size:.72rem}.admission-cta{padding:26px 22px}.admission-cta h2{font-size:1.35rem}}
 </style>
