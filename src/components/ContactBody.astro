@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import contactImage from "../assets/images/contacto/estudiante-sonriente-aula-moderna.png";
 import ContactFormSimple from "./ContactFormSimple.astro";
+import { whatsappDisplay, whatsappHref } from "../utils/whatsapp";
 
 interface Props { lang: "es" | "en" }
 const { lang } = Astro.props;
@@ -25,7 +26,7 @@ const copy = {
     channelsIntro: "Elige el medio más cómodo para comunicarte con nosotros.",
     channels: [
       { icon: "phone", tone: "blue", title: "Teléfono", value: "+51 976 586 016", text: "Llámanos para una atención directa.", href: "tel:+51976586016" },
-      { icon: "whatsapp", tone: "green", title: "WhatsApp", value: "+51 976 586 016", text: "Escríbenos por WhatsApp de forma rápida.", href: "https://wa.me/51976586016" },
+      { icon: "whatsapp", tone: "green", title: "WhatsApp", value: whatsappDisplay, text: "Escríbenos por WhatsApp de forma rápida.", href: whatsappHref },
       { icon: "mail", tone: "orange", title: "Email", value: "info@boston.edu.pe", text: "Envíanos un correo con tu consulta.", href: "mailto:info@boston.edu.pe" },
     ],
     scheduleTitle: "Horario de Atención",
@@ -57,7 +58,7 @@ const copy = {
     channelsIntro: "Choose the most convenient way to get in touch with us.",
     channels: [
       { icon: "phone", tone: "blue", title: "Phone", value: "+51 976 586 016", text: "Call us for direct assistance.", href: "tel:+51976586016" },
-      { icon: "whatsapp", tone: "green", title: "WhatsApp", value: "+51 976 586 016", text: "Message us on WhatsApp for a quick response.", href: "https://wa.me/51976586016" },
+      { icon: "whatsapp", tone: "green", title: "WhatsApp", value: whatsappDisplay, text: "Message us on WhatsApp for a quick response.", href: whatsappHref },
       { icon: "mail", tone: "orange", title: "Email", value: "info@boston.edu.pe", text: "Email us with your question.", href: "mailto:info@boston.edu.pe" },
     ],
     scheduleTitle: "Opening Hours",

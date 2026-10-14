@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import secondaryImage from "../assets/images/propuesta_academica/secundaria/alumna_2.png";
 import admissionsImage from "../assets/images/propuesta_academica/secundaria/alumnos_secundaria.png";
+import { whatsappHref } from "../utils/whatsapp";
 
 interface Props {
   page: "primaria" | "secundaria" | "admisiones" | "contacto" | "nosotros";
@@ -37,7 +38,7 @@ const light = page === "primaria" || page === "contacto";
       <p>{description}</p>
       <div class="site-action__actions">
         <a href={href}>{label} <span aria-hidden="true">→</span></a>
-        {page === "admisiones" && <a class="site-action__secondary" href="https://wa.me/51976586016" target="_blank" rel="noopener noreferrer">WhatsApp</a>}
+        {page === "admisiones" && <a class="site-action__secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp</a>}
       </div>
     </div>
   </div>

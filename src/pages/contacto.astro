@@ -6,6 +6,7 @@ import ContactFormSimple from "../components/ContactFormSimple.astro";
 import SiteHero from "../components/SiteHero.astro";
 import FeatureStrip from "../components/FeatureStrip.astro";
 import ActionPanel from "../components/ActionPanel.astro";
+import { whatsappHref } from "../utils/whatsapp";
 
 const lang = "es";
 const t = getTranslation(lang);
@@ -34,7 +35,7 @@ const t = getTranslation(lang);
 
 						<div class="info-block">
 							<h3>💬 WhatsApp</h3>
-							<p><a href="https://wa.me/51976586016" target="_blank">Contáctanos por WhatsApp</a></p>
+							<p><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Contáctanos por WhatsApp</a></p>
 						</div>
 
 						<div class="info-block">
